@@ -1,0 +1,14 @@
+import React from 'react';
+import ReactDOM from 'react-dom'
+import 'bootstrap/dist/css/bootstrap-reboot.min.css';   // bootstrap reset
+import 'font-awesome/css/font-awesome.min.css'; // fontawesome icons
+import './styles/base.css';
+import App from './components/App';
+import * as serviceWorker from './serviceWorker';
+
+ReactDOM.render(<App />, document.getElementById('root'));
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
+serviceWorker.unregister();
