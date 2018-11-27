@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
 import 'bootstrap/dist/css/bootstrap-reboot.min.css';   // bootstrap reset
-import 'font-awesome/css/font-awesome.min.css'; // fontawesome icons
+import '@fortawesome/fontawesome-free/css/all.min.css'; // fontawesome 5 icons
 import './styles/base.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
