@@ -1,5 +1,6 @@
 .slider-control-container{
     width: 100%;
+    margin-bottom: 2rem;
 }
 .slider-control-container .label-container{
     font-family: Calibri, sans-serif;
@@ -31,20 +32,20 @@
 }
 
 .slider-control-container .range-container input {
-    margin-top: 2rem;
+    margin-top: .9rem;
     -webkit-appearance: none;
     outline: none;
-    height: 1rem;
+    height: .9rem;
     background: #ccc;
     width: 100%;
 }
 
-
+/* range slider styling */
 .slider-control-container .range-container input::-webkit-slider-thumb{
     -webkit-appearance: none;
     background: #2a6f9e;
     cursor: pointer;
-    height: 1rem;
+    height: .9rem;
     width: 1.5rem;
 }
 .slider-control-container .range-container input::-moz-range-thumb{
