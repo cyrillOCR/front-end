@@ -1,0 +1,76 @@
+.textarea-container {
+    width: 100%;
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.textarea-container .textarea-copy-button {
+    cursor: pointer;
+    box-shadow: -1px 1px 1px #ccc;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    background: #fff;
+    color: #999999;
+    font-size: .9rem;
+    text-align: center;
+    outline: none;
+    border: none;
+    border-top-right-radius: 5px;
+    border-top: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    opacity: 0;
+    transition: All .2s ease;
+}
+
+.textarea-container .textarea-copy-button.success {
+    color: #2a6f9e;
+    opacity: 1;
+}
+
+.textarea-container .textarea-copy-button.error {
+    color: #e85252;
+    opacity: 1;
+}
+
+.textarea-container:hover .textarea-copy-button {
+    opacity: 1;
+}
+
+.textarea-container textarea {
+    font-family: Calibri, sans-serif;
+    outline: none;
+    font-size: 1.1rem;
+    color: #181819;
+    flex-grow: 1;
+    resize: none;
+    box-sizing: border-box;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: justify;
+}
+
+/* style for textarea scrollbar */
+
+.textarea-container textarea::-webkit-scrollbar {
+    width: .5rem;
+}
+
+.textarea-container textarea::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: #2a6f9e;
+}
+
+/* smaller textarea font-size */
+
+@media (max-width: 740px) {
+    .textarea-container textarea {
+        font-size: 1rem;
+    }
+}
