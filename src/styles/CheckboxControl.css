@@ -22,7 +22,7 @@
 
 /* empty checkbox */
 .checkbox-control-container .checkbox-icon.fa-square {
-  font-weight: 200;
+  font-weight: 100;
 }
 
 .checkbox-control-container .label-text {
@@ -36,4 +36,10 @@
   vertical-align: middle;
   margin-left: 5px;
   margin-right: 5px;
+  visibility: hidden;
+}
+
+/* tooltip content visible on hover */
+.tooltip-icon:hover + .tooltip-text {
+  visibility: visible;
 }

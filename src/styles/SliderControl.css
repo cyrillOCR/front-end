@@ -1,5 +1,6 @@
-.slider-control-container {
-  width: 100%;
+.slider-control-container{
+    width: 100%;
+    margin-bottom: 2rem;
 }
 .slider-control-container .label-container {
   font-family: Calibri, sans-serif;
@@ -31,29 +32,30 @@
 }
 
 .slider-control-container .range-container input {
-  margin-top: 2rem;
-  -webkit-appearance: none;
-  outline: none;
-  height: 1rem;
-  background: #ccc;
-  width: 100%;
+    margin-top: .9rem;
+    -webkit-appearance: none;
+    outline: none;
+    height: .9rem;
+    background: #ccc;
+    width: 100%;
 }
 
-.slider-control-container .range-container input::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  background: #2a6f9e;
-  cursor: pointer;
-  height: 1rem;
-  width: 1.5rem;
+/* range slider styling */
+.slider-control-container .range-container input::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    background: #2a6f9e;
+    cursor: pointer;
+    height: .9rem;
+    width: 1.5rem;
 }
-.slider-control-container .range-container input::-moz-range-thumb {
-  background: #2a6f9e;
-  height: 1rem;
-  cursor: pointer;
-  border-radius: 0px;
-  border: none;
-  outline: none;
-  width: 1.5rem;
+.slider-control-container .range-container input::-moz-range-thumb{
+    background: #2a6f9e;
+    height: 1rem;
+    cursor: pointer;
+    border-radius: 0px;
+    border: none;
+    outline: none;
+    width: 1.5rem;
 }
 
 .slider-control-container .range-container input::-moz-range-track {
