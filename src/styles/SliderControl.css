@@ -1,63 +1,62 @@
-.slider-control-container{
-    width: 100%;
+.slider-control-container {
+  width: 100%;
 }
-.slider-control-container .label-container{
-    font-family: Calibri, sans-serif;
-    font-size: 1.2rem;
-    color: #262626;
+.slider-control-container .label-container {
+  font-family: Calibri, sans-serif;
+  font-size: 1.2rem;
+  color: #262626;
 }
-.slider-control-container .label-container .label-icon{
-    font-size: 1.4rem;
-    margin-right: 5px;
-    position: relative;
-    top: 2px;
-    color: #2a6f9e;
-}
-
-.slider-control-container .label-container .value-input input{
-    display: inline-block;
-    outline: none;
-    border: none;
-    margin-left: 5px;
-    background: #e5e5e5;
-    padding: .1rem 0 .1rem .2rem;
-    height: 1rem;
-    font-size: 1rem;
+.slider-control-container .label-container .label-icon {
+  font-size: 1.4rem;
+  margin-right: 5px;
+  position: relative;
+  top: 2px;
+  color: #2a6f9e;
 }
 
-.slider-control-container .label-container span.unit{
-    font-size: .9rem;
-    margin-left: 2px;
+.slider-control-container .label-container .value-input input {
+  display: inline-block;
+  outline: none;
+  border: none;
+  margin-left: 5px;
+  background: #e5e5e5;
+  padding: 0.1rem 0 0.1rem 0.2rem;
+  height: 1rem;
+  font-size: 1rem;
+}
+
+.slider-control-container .label-container span.unit {
+  font-size: 0.9rem;
+  margin-left: 2px;
 }
 
 .slider-control-container .range-container input {
-    margin-top: 2rem;
-    -webkit-appearance: none;
-    outline: none;
-    height: 1rem;
-    background: #ccc;
-    width: 100%;
+  margin-top: 2rem;
+  -webkit-appearance: none;
+  outline: none;
+  height: 1rem;
+  background: #ccc;
+  width: 100%;
 }
 
-
-.slider-control-container .range-container input::-webkit-slider-thumb{
-    -webkit-appearance: none;
-    background: #2a6f9e;
-    cursor: pointer;
-    height: 1rem;
-    width: 1.5rem;
+.slider-control-container .range-container input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #2a6f9e;
+  cursor: pointer;
+  height: 1rem;
+  width: 1.5rem;
 }
-.slider-control-container .range-container input::-moz-range-thumb{
-    background: #2a6f9e;
-    height: 1rem;
-    cursor: pointer;
-    border-radius: 0px;
-    border: none;
-    outline: none;
-    width: 1.5rem;
+.slider-control-container .range-container input::-moz-range-thumb {
+  background: #2a6f9e;
+  height: 1rem;
+  cursor: pointer;
+  border-radius: 0px;
+  border: none;
+  outline: none;
+  width: 1.5rem;
 }
 
-.slider-control-container .range-container input::-moz-range-track{
-    height: 1rem;
-    background: #ccc;
-  }
+.slider-control-container .range-container input::-moz-range-track {
+  height: 1rem;
+  background: #ccc;
+}
