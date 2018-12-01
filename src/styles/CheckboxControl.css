@@ -1,45 +1,45 @@
 .checkbox-control-container {
-  width: 100%;
+    width: 100%;
 }
 
 .checkbox-control-container .checkbox-container {
-  font-family: Calibri, sans-serif;
-  font-size: 1.2rem;
-  line-height: 1.5rem;
-  color: #262626;
+    font-family: Calibri, sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    color: #262626;
 }
 
 .checkbox-control-container .checkbox-icon {
-  color: #2a6f9e;
-  font-size: 1.35rem;
-  vertical-align: middle;
+    color: #2a6f9e;
+    font-size: 1.35rem;
+    vertical-align: middle;
 }
 
 .checkbox-control-container .tooltip-icon {
-  font-size: 1.2rem;
-  vertical-align: middle;
+    font-size: 1.2rem;
+    vertical-align: middle;
 }
 
 /* empty checkbox */
 .checkbox-control-container .checkbox-icon.fa-square {
-  font-weight: 100;
+    font-weight: 100;
 }
 
 .checkbox-control-container .label-text {
-  vertical-align: middle;
-  margin-left: 5px;
-  margin-right: 5px;
+    vertical-align: middle;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .checkbox-control-container .tooltip-text {
-  font-size: 1rem;
-  vertical-align: middle;
-  margin-left: 5px;
-  margin-right: 5px;
-  visibility: hidden;
+    font-size: 1rem;
+    vertical-align: middle;
+    margin-left: 5px;
+    margin-right: 5px;
+    visibility: hidden;
 }
 
 /* tooltip content visible on hover */
 .tooltip-icon:hover + .tooltip-text {
-  visibility: visible;
+    visibility: visible;
 }
