@@ -9,29 +9,20 @@ export default class CheckboxControl extends Component {
     this.handleChange = this.handleChange.bind(this);
 
     this.state = {
-      checked: false
+      checked: props.defaultValue === undefined ? false : props.defaultValue
     };
   }
 
   handleChange(e) {
     const checked = !this.state.checked;
     this.setState({ checked });
-    this.props.onChange();
+    this.props.onChange(checked);
   }
 
   render() {
     var checkboxIcon;
     if (this.state.checked) checkboxIcon = "fas fa-check-square";
     else checkboxIcon = "fas fa-square";
-
-    var tooltip;
-    if (this.props.hasTooltip)
-      tooltip = (
-        <React.Fragment>
-          <FontAwesome className="tooltip-icon" name="fas fa-info-circle" />
-          <span className="tooltip-text">{this.props.tooltipText}</span>
-        </React.Fragment>
-      );
 
     return (
       <div className="checkbox-control-container">
@@ -42,7 +33,12 @@ export default class CheckboxControl extends Component {
             onClick={this.handleChange}
           />
           <span className="label-text">{this.props.label}</span>
-          {tooltip}
+          {this.props.tooltipText && (
+            <React.Fragment>
+              <FontAwesome className="tooltip-icon" name="fas fa-info-circle" />
+              <span className="tooltip-text">{this.props.tooltipText}</span>
+            </React.Fragment>
+          )}
         </div>
       </div>
     );
@@ -52,13 +48,6 @@ export default class CheckboxControl extends Component {
 CheckboxControl.propTypes = {
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
-  hasTooltip: PropTypes.bool.isRequired,
-  tooltipText: function(props, propName, componentName) {
-    if (
-      props["hasTooltip"] === true &&
-      (props[propName] === undefined || typeof props[propName] !== "string")
-    ) {
-      return new Error("Please provide tooltip content!");
-    }
-  }
+  defaultValue: PropTypes.bool,
+  tooltipText: PropTypes.string
 };
