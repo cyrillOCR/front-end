@@ -1,0 +1,29 @@
+.sidekick-container {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+h3.sidekick-title {
+    font-family: 'Calibri Light', sans-serif;
+    font-size: 1.5rem;
+    color: #242424;
+    margin-bottom: 2.5rem;
+}
+
+h3.sidekick-title::before {
+    display: inline-block;
+    content: " ";
+    background: #2a6f9e;
+    height: 1.5rem;
+    width: 5px;
+    margin-right: 1rem;
+    position: relative;
+    top: 0.25rem;
+}
+
+.sidekick-container .sidekick-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
