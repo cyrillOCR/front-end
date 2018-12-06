@@ -1,56 +1,70 @@
 .buttons-group{
-    width: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-family: Calibri;
+
+    font-size: 20px;
+  
+    font-weight: normal;
+  
+    font-style: normal;
+  
+    font-stretch: normal;
+  
+    line-height: normal;
+  
+    letter-spacing: normal;
+  
+    text-align: left;
+  
+    color: #242424;
 }
 
-.primaryButton {
-    font-size: 1.5em;
-    background-color: rgb(76, 106, 236);
+.primary-button {
+    background-color: #2a6f9e;
     border: none;
-    color: white;
-    font-family: 'Times New Roman', Times, serif;
     text-align: center;
-    text-decoration: none;
-    padding: 10px 30px;
-    margin-left: 2em;
-    margin-right: 2em;
+    height: 46px;
+    color: #f0f0f0;
+    display: flex;
+    align-items:center;
+}
+
+.icon-back{
+    font-size: 20px;
+    transform: rotate(-10deg);
+    margin-right: 6px;
+    color: #f0f0f0;
 }
 
 
-.secondaryButton {
-    font-size: 1.5em;
-    background-color: #cacaca;
+.secondary-button {
+    background-color: #cccccc;
     border: none;
-    color: black;
-    font-family: 'Times New Roman', Times, serif;
     text-align: center;
-    text-decoration: none;
-    padding: 10px 30px;
-    margin-right: 2em;
+    height: 46px;
 }
 
-.auxiliaryButton {
-    font-size: 1.5em;
+.auxiliary-button {
     background-color: white;
-    font-family: 'Times New Roman', Times, serif;
     border: none;
-    color: black;
     text-align: center;
-    text-decoration: none;
-    padding: 10px 30px;
+    height: 46px;
 }
 
-.buttons-group .primaryButton:hover {
+.buttons-group .primary-button:hover {
     background-color: #063a9b;
     transition: 0.5s ease-in-out;
 }
 
-.buttons-group .secondaryButton:hover {
+.buttons-group .secondary-button:hover {
     background-color: #555c55;
     transition: 0.5s ease-in-out;
     color:white;
 }
 
-.buttons-group .auxiliaryButton:hover {
+.buttons-group .auxiliary-button:hover {
     background-color: black;
     transition: 0.5s ease-in-out;
     color:white;

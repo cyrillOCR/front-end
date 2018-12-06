@@ -1,18 +1,34 @@
-import React, { Component } from 'react';
+import React from 'react';
 import '../styles/ButtonsControl.css'
 import FontAwesome from 'react-fontawesome'
+import PropTypes from 'prop-types'
+import ButtonContainer from './ButtonContainer';
 
-class ButtonsControl extends Component{
-    
-    render() {
-        return (
+const ButtonsControl = ({handleBack, handleAdjust, handleUpload})=>(
         <div className="buttons-group">
-            <button className="primaryButton">
-            <span><FontAwesome className="fas fa-undo-alt"/></span>{this.props.primaryButton}</button>
-            <button className="secondaryButton">{this.props.secondaryButton}</button>
-            <button className="auxiliaryButton">{this.props.auxiliaryButton}</button>
-        </div>)
-    }
+            <ButtonContainer 
+                label="Back" 
+                icon={<FontAwesome className="fas fa-undo-alt icon-back" name="back" />}
+                handleClick={handleBack}
+                className="primary-button"
+            />
+            <ButtonContainer 
+                label="Adjust image" 
+                handleClick={handleAdjust}
+                className="secondary-button"
+            />
+            <ButtonContainer 
+                label="Upload other image" 
+                handleClick={handleUpload}
+                className="auxiliary-button"
+            />
+        </div>
+)
+
+ButtonsControl.propTypes = {
+    handleBack:PropTypes.func.isRequired,
+    handleAdjust:PropTypes.func.isRequired,
+    handleUpload:PropTypes.func.isRequired,
 }
 
 export default ButtonsControl;
