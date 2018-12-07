@@ -1,0 +1,13 @@
+.canvas-container {
+    position: relative;
+    display: inline-block;
+}
+
+.image-editor-canvas{
+    display: block;
+}
+
+.control-rect-container {
+    position: absolute;
+    border: 3px solid #000;
+}
