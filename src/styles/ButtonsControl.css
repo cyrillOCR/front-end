@@ -1,9 +1,8 @@
 .buttons-group{
-    width: 100%;
+    width: 60%;
     display: flex;
     justify-content: space-between;
     font-family: Calibri;
-
     font-size: 20px;
   
     font-weight: normal;
@@ -27,8 +26,12 @@
     text-align: center;
     height: 46px;
     color: #f0f0f0;
-    display: flex;
     align-items:center;
+    display: inline-block;
+    -moz-transition: all .5s ease-out;
+    -o-transition: all .5s ease-out;
+    -ms-transition: all .5s ease-out;
+    transition: all .5s ease-out;
 }
 
 .icon-back{
@@ -44,6 +47,8 @@
     border: none;
     text-align: center;
     height: 46px;
+    display: inline-block;
+    color: #242424;
 }
 
 .auxiliary-button {
@@ -51,11 +56,17 @@
     border: none;
     text-align: center;
     height: 46px;
+    display: inline-block;
+    text-decoration: underline;
+    color: #242424;
 }
 
 .buttons-group .primary-button:hover {
-    background-color: #063a9b;
+    background-color: #5f8094;
     transition: 0.5s ease-in-out;
+    color:#1f4c69;
+    font-size: 25px;
+    border: 1px solid;
 }
 
 .buttons-group .secondary-button:hover {
@@ -65,7 +76,7 @@
 }
 
 .buttons-group .auxiliary-button:hover {
-    background-color: black;
+    background-color: rgb(196, 196, 196);
     transition: 0.5s ease-in-out;
     color:white;
 }
