@@ -1,7 +1,7 @@
 .dropzone{
     color: #999999;
     height: 100%;
-    margin: 50px auto;
+    margin: 20px auto;
     padding-bottom: 75%;
     position: relative;
     width: 80%;
@@ -12,8 +12,20 @@
     flex-direction: column;
 }
 
-.dropzone .upload-placeholder .fa-upload {
-    font-size: 4rem;
+.dropzone .upload-placeholder .fa-upload, .fa-file {
+    /* font-size: 6rem; */
+}
+
+.dropzone .upload-placeholder .fa-arrow-up {
+    font-size: 3.5rem;
+    /* index: 1; */
+
+}
+
+.dropzone .upload-placeholder .fa-stack {
+    color: #bbbbbb;
+    font-size: 5rem;
+    width: 100%;
 }
 
 .dropzone .upload-placeholder .upload-text {

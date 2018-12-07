@@ -17,7 +17,7 @@ body {
 }
 
 .image-upload-screen-container .about-app-container .App-logo {
-    height: 13vmin;
+    height: 20vmin;
     width: 90%;
 }
 
@@ -27,7 +27,7 @@ body {
 
 .image-upload-screen-container .about-app-container .about-app h2 {
     color: #2a6f9e;
-    font-size: 32px;
+    font-size: 30px;
 }
 
 .image-upload-screen-container .about-app-container .about-app .how-to-container {

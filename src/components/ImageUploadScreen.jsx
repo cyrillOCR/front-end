@@ -1,10 +1,14 @@
 import React, { Component }  from 'react';
+import PropTypes from 'prop-types'
 
 import "../styles/ImageUploadScreen.css";
 import ImageUploader from './ImageUploader'; 
 import logo from '../assets/logo.svg';
 
 export default class ImageUploadScreen extends Component {
+    constructor(props) {
+        super(props)
+    }
 
     render() {
         return ( 
@@ -24,15 +28,6 @@ export default class ImageUploadScreen extends Component {
                                 and then submit it to our powerful OCR so it 
                                 can get the text from your dusty old documents.
                             </span>
-                            <h3>Our application can do:</h3>
-                            <div>
-                                <ul>
-                                    <li>this cool feature</li>
-                                    <li>other amazing feature</li>
-                                    <li>can also do this</li>
-                                    <li>and that</li>                                    
-                                </ul>
-                            </div>
                         </div>
                     </article>
 
@@ -40,11 +35,14 @@ export default class ImageUploadScreen extends Component {
                 
                 <div className="image-uploader-container">
                     <div className="image-uploader">       
-                        <ImageUploader/>
+                        <ImageUploader callback={this.props.callback}/>
                     </div>
-                
                 </div>
             </div>    
         );
     }
+}
+
+ImageUploadScreen.propTypes = {
+    callblack: PropTypes.func.isRequired
 }
