@@ -5,11 +5,13 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.5.0",
     "bootstrap": "^4.0.0-alpha.6",
+    "intrinsic-scale": "^3.0.3",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-dropzone": "^7.0.1",
     "react-fontawesome": "^1.6.1",
+    "react-resize-observer": "^1.1.1",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5"
