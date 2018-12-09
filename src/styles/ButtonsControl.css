@@ -1,0 +1,67 @@
+.buttons-group{
+    justify-content: space-between;
+    font-family: Calibri;
+    font-size: 20px;
+    color: #242424;
+}
+
+.primary-button {
+    background-color: #2a6f9e;
+    border: none;
+    text-align: center;
+    width: 103px;
+    height: 46px;
+    color: #f0f0f0;
+    align-items:center;
+    display: inline-block;
+    -moz-transition: all .5s ease-out;
+    -o-transition: all .5s ease-out;
+    -ms-transition: all .5s ease-out;
+    transition: all .5s ease-out;
+    padding:3px 17px;
+    margin-right: 13px;
+}
+
+.icon-back{
+    font-size: 20px;
+    transform: rotate(-10deg);
+    margin-right: 6px;
+    color: #f0f0f0;
+}
+
+
+.secondary-button {
+    background-color: #cccccc;
+    border: none;
+    text-align: center;
+    height: 46px;
+    display: inline-block;
+    color: #242424;
+    padding:0px 21px;
+    margin-right: 13px;
+}
+
+.auxiliary-button {
+    background-color: white;
+    border: none;
+    text-align: center;
+    height: 46px;
+    display: inline-block;
+    color: #242424;
+}
+
+.buttons-group .primary-button:hover {
+    transition: 0.5s ease-in-out;
+    background-color:#1f4c69;
+}
+
+.buttons-group .secondary-button:hover {
+    background-color: #ffffff;
+    transition: 0.5s ease-in-out;
+}
+
+.buttons-group .auxiliary-button:hover {
+    background-color: #ffffff;
+    transition: 0.5s ease-in-out;
+    text-decoration: underline;
+}
