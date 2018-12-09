@@ -1,22 +1,7 @@
 .buttons-group{
-    width: 60%;
-    display: flex;
     justify-content: space-between;
     font-family: Calibri;
     font-size: 20px;
-  
-    font-weight: normal;
-  
-    font-style: normal;
-  
-    font-stretch: normal;
-  
-    line-height: normal;
-  
-    letter-spacing: normal;
-  
-    text-align: left;
-  
     color: #242424;
 }
 
@@ -24,6 +9,7 @@
     background-color: #2a6f9e;
     border: none;
     text-align: center;
+    width: 103px;
     height: 46px;
     color: #f0f0f0;
     align-items:center;
@@ -32,6 +18,8 @@
     -o-transition: all .5s ease-out;
     -ms-transition: all .5s ease-out;
     transition: all .5s ease-out;
+    padding:3px 17px;
+    margin-right: 13px;
 }
 
 .icon-back{
@@ -49,6 +37,8 @@
     height: 46px;
     display: inline-block;
     color: #242424;
+    padding:0px 21px;
+    margin-right: 13px;
 }
 
 .auxiliary-button {
@@ -57,26 +47,21 @@
     text-align: center;
     height: 46px;
     display: inline-block;
-    text-decoration: underline;
     color: #242424;
 }
 
 .buttons-group .primary-button:hover {
-    background-color: #5f8094;
     transition: 0.5s ease-in-out;
-    color:#1f4c69;
-    font-size: 25px;
-    border: 1px solid;
+    background-color:#1f4c69;
 }
 
 .buttons-group .secondary-button:hover {
-    background-color: #555c55;
+    background-color: #ffffff;
     transition: 0.5s ease-in-out;
-    color:white;
 }
 
 .buttons-group .auxiliary-button:hover {
-    background-color: rgb(196, 196, 196);
+    background-color: #ffffff;
     transition: 0.5s ease-in-out;
-    color:white;
+    text-decoration: underline;
 }
