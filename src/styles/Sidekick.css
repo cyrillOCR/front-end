@@ -27,3 +27,7 @@ h3.sidekick-title::before {
     flex-direction: column;
     flex-grow: 1;
 }
+
+.pagination {
+    text-align: center;
+}
