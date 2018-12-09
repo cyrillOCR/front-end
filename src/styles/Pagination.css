@@ -1,0 +1,56 @@
+.pagination-container {
+    width: 100%;
+    font-family: Calibri, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: #262626;
+    user-select: none;
+}
+
+.page-label {
+    margin: 0 0.6rem;
+    vertical-align: middle;
+}
+
+.arrow {
+    font-size: 2.5rem;
+    color: #262626;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.arrow:hover {
+    color: #2a6f9e;
+}
+
+.disabled {
+    opacity: 0.5;
+    color: #262626 !important;
+    cursor: context-menu;
+}
+
+.value-input input {
+    display: inline-block;
+    outline: none;
+    border: none;
+    text-align: center;
+    margin-left: 5px;
+    background: #e5e5e5;
+    height: 1rem;
+    font-size: 1rem;
+    padding: 10px 0;
+}
+
+.value-input input:focus {
+    background: darkgray;
+}
+
+.no-spinners {
+    -moz-appearance: textfield;
+}
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
