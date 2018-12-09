@@ -6,37 +6,60 @@ export default class ImageEditor extends Component {
     constructor(props) {
         super(props);
         this.canvas = React.createRef();
+        this.state = {
+            bounds: {
+                width: this.props.width || .5,
+                height: this.props.height || .5,
+                top: this.props.top || .25,
+                left: this.props.left || .25
+            },
+            overlayStyle:{}
+        };
         this.controlRect = React.createRef();
     }
 
     getRectLimits(rectBounds) {
-        const canvas = this.canvas.current;
-        const limits = {
-            top: canvas.height - rectBounds.height,
-            left: canvas.width - rectBounds.width,
-            width: canvas.width - rectBounds.left,
-            height: canvas.height - rectBounds.top
+        return {
+            top: 1 - rectBounds.height,
+            left: 1 - rectBounds.width,
+            width: 1 - rectBounds.left,
+            height: 1 - rectBounds.top
         }
-        return limits;
+    }
+
+    updateOverlayStyle(){
+        const canvas = this.canvas.current;
+        const style = {
+            top: canvas.offsetTop,
+            right: 0,
+            width: canvas.offsetWidth,
+            height: canvas.offsetHeight,
+            position: 'absolute'
+        }
+        this.setState({overlayStyle: style})
     }
 
     getRectBounds() {
-        const controlRect = this.controlRect.current;
-        return ({
-            top: controlRect.offsetTop,
-            left: controlRect.offsetLeft,
-            width: controlRect.offsetWidth,
-            height: controlRect.offsetHeight
-        });
+        const canvas = this.canvas.current;
+        const rect = this.controlRect.current;
+        const newBounds = {
+            top: rect.offsetTop / canvas.offsetHeight,
+            left: rect.offsetLeft / canvas.offsetWidth,
+            width: rect.offsetWidth / canvas.offsetWidth,
+            height: rect.offsetHeight / canvas.offsetHeight
+        }
+        return newBounds;
+
     }
 
     getRectImage(bounds) {
-        const ctx = this.canvas.current.getContext("2d");
+        const canvas = this.canvas.current;
+        const ctx = canvas.getContext("2d");
         const image = ctx.getImageData(
-            bounds.left,
-            bounds.top,
-            bounds.width,
-            bounds.height
+            bounds.left * canvas.width,
+            bounds.top * canvas.height,
+            bounds.width * canvas.width,
+            bounds.height * canvas.height
         );
         let newCanvas = document.createElement('canvas');
         newCanvas.width = image.width;
@@ -45,35 +68,38 @@ export default class ImageEditor extends Component {
         return newCanvas.toDataURL();
     }
 
-    onRectUpdate() {
-        const bounds = this.getRectBounds();
-        const limits = this.getRectLimits(bounds);
-        this.props.onChange({ bounds, limits });
+    updateRect(bounds) {
+        console.log('intra in updateRect');
+        const newBounds = bounds || this.getRectBounds();
+        const newLimits = this.getRectLimits(newBounds);
+        this.setState({ bounds: newBounds, limits: newLimits })
+        this.props.onChange({ bounds: newBounds, limits: newLimits });
     }
 
-    /*
-        Draw the image on the canvas when the component mounts
-        Also, call the onChange callback with some default values.
-    */
     componentDidMount() {
         // draw image when component mounts
         let image = new Image();
         image.onload = () => {
+            //draw the image on canvas
             let canvas = this.canvas.current;
             canvas.width = image.width;
             canvas.height = image.height;
             canvas.getContext("2d").drawImage(image, 0, 0);
 
-            const defaultBounds = {
-                width: image.width / 2,
-                height: image.height / 2,
-                top: image.height / 4,
-                left: image.width / 4
-            };
-            const defaultLimits = this.getRectLimits(defaultBounds);
-            this.props.onChange({ bounds: defaultBounds, limits: defaultLimits });
+            // update rect proportions
+            this.updateOverlayStyle();
+            window.addEventListener('resize', this.updateOverlayStyle.bind(this));
+
+            //call onChange callback so that the parent component will have initial values to pass to sliders
+            const defaultLimits = this.getRectLimits(this.state.bounds);
+            this.setState({limits: defaultLimits });
+            this.props.onChange({ bounds: this.state.bounds, limits: this.state.limits });
         }
-        image.src = this.props.imageData;
+        image.src = this.props.imageURI;
+    }
+
+    componentWillUnmount(){
+        window.removeEventListener('resize', this.updateOverlayStyle.bind(this));
     }
 
     render() {
@@ -84,16 +110,17 @@ export default class ImageEditor extends Component {
                         className="image-editor-canvas"
                         ref={this.canvas}
                     ></canvas>
-                    <div
-                        style={{
-                            top: this.props.top,
-                            left: this.props.left,
-                            width: this.props.width + 'px',
-                            height: this.props.height + 'px'
-                        }}
-                        className="control-rect-container"
-                        ref={this.controlRect}
-                        onClick={() => this.onRectUpdate()}></div>
+                    <div style={this.state.overlayStyle}>
+                        <div 
+                            style={{
+                                top: this.state.bounds.top * 100 + '%',
+                                left: this.state.bounds.left * 100 + '%',
+                                width: this.state.bounds.width * 100 + '%',
+                                height: this.state.bounds.height * 100 + '%'
+                            }}
+                            className="control-rect-container"
+                            ref={this.controlRect}></div>
+                    </div>
                 </div>
             </div>
         )
@@ -101,7 +128,7 @@ export default class ImageEditor extends Component {
 }
 
 ImageEditor.propTypes = {
-    imageData: PropTypes.string.isRequired,
+    imageURI: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     top: PropTypes.number.isRequired,
     left: PropTypes.number.isRequired,
