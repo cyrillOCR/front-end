@@ -1,67 +1,56 @@
-.buttons-group{
-    justify-content: space-between;
-    font-family: Calibri;
-    font-size: 20px;
-    color: #242424;
+.buttons-group button {
+    font-size: 1.2rem;
+    font-family: 'Calibri', sans-serif;
+    height: 3rem;
+    line-height: 3rem;
+    display: inline-block;
+    padding: 0 1rem;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: All .2s ease;
+    outline: none
+}
+
+.buttons-group button .button-icon{
+    font-size: 1rem;
+    margin-right: .3rem;
+}
+
+.buttons-group button:first-child {
+    margin-left: 0;
+}
+
+.buttons-group button:last-child{
+    padding: 0;
 }
 
 .primary-button {
     background-color: #2a6f9e;
-    border: none;
-    text-align: center;
-    width: 103px;
-    height: 46px;
-    color: #f0f0f0;
-    align-items:center;
-    display: inline-block;
-    -moz-transition: all .5s ease-out;
-    -o-transition: all .5s ease-out;
-    -ms-transition: all .5s ease-out;
-    transition: all .5s ease-out;
-    padding:3px 17px;
-    margin-right: 13px;
-}
-
-.icon-back{
-    font-size: 20px;
-    transform: rotate(-10deg);
-    margin-right: 6px;
+    border: 1px solid #2a6f9e;
     color: #f0f0f0;
 }
 
+.primary-button:hover{
+    background: transparent;
+    color: #2a6f9e;
+}
 
 .secondary-button {
     background-color: #cccccc;
-    border: none;
-    text-align: center;
-    height: 46px;
-    display: inline-block;
     color: #242424;
-    padding:0px 21px;
-    margin-right: 13px;
+    border: 1px solid #cccccc;
+}
+
+.secondary-button:hover{
+    background: transparent;
 }
 
 .auxiliary-button {
-    background-color: white;
+    background-color: transparent;
     border: none;
-    text-align: center;
-    height: 46px;
-    display: inline-block;
     color: #242424;
 }
 
-.buttons-group .primary-button:hover {
-    transition: 0.5s ease-in-out;
-    background-color:#1f4c69;
-}
-
-.buttons-group .secondary-button:hover {
-    background-color: #ffffff;
-    transition: 0.5s ease-in-out;
-}
-
-.buttons-group .auxiliary-button:hover {
-    background-color: #ffffff;
-    transition: 0.5s ease-in-out;
+.auxiliary-button:hover{
     text-decoration: underline;
 }

@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types'
+import FontAwesome from 'react-fontawesome'
 
 const ButtonContainer = ({handleClick, label, icon, className}) =>(
     <button className={className} onClick={handleClick}>
-        {icon && icon}
+        {icon &&
+            <FontAwesome className="button-icon" name={icon} />
+        }
         {label}
     </button>
 );
@@ -11,7 +14,7 @@ const ButtonContainer = ({handleClick, label, icon, className}) =>(
 ButtonContainer.propTypes = {
     handleClick:PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
-    icon: PropTypes.element,
+    icon: PropTypes.string,
     className: PropTypes.string
 }
 

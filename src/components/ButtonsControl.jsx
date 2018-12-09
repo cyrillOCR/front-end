@@ -1,6 +1,5 @@
 import React from 'react';
 import '../styles/ButtonsControl.css'
-import FontAwesome from 'react-fontawesome'
 import PropTypes from 'prop-types'
 import ButtonContainer from './ButtonContainer';
 
@@ -8,7 +7,7 @@ const ButtonsControl = ({handlePrimary , handleSecondary , handleAuxiliary , pri
         <div className="buttons-group">
             <ButtonContainer 
                 label={primaryLabel} 
-                icon={<FontAwesome className={iconLabel} name="back" />}
+                icon={iconLabel}
                 handleClick={handlePrimary}
                 className="primary-button"
             />
