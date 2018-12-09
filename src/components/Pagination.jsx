@@ -13,17 +13,22 @@ export default class Pagination extends Component {
         this.handleDecrement = this.handleDecrement.bind(this);
 
         this.state = {
-            currentPage:
-                props.currentPage === undefined ? 1 : props.currentPage,
-            totalPages: props.totalPages,
-            lastPage: props.currentPage === undefined ? 1 : props.currentPage
+            currentPage: props.currentPage,
+            lastPage: props.currentPage
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            currentPage:
+                nextProps.currentPage,
+            lastPage: nextProps.currentPage
+        });
+    }
+
     handleChange(newCurrentPage) {
-        if (newCurrentPage !== this.state.currentPage)
-            this.setState({ currentPage: newCurrentPage });
-        if (this.state.lastPage != newCurrentPage) {
+        this.setState({ currentPage: newCurrentPage });
+        if (this.state.lastPage !== newCurrentPage) {
             this.props.onChange(newCurrentPage);
             this.setState({ lastPage: newCurrentPage });
         }
@@ -31,7 +36,7 @@ export default class Pagination extends Component {
 
     handleInput(e) {
         var newCurrentPage = e.target.value;
-        if (newCurrentPage > this.state.totalPages) {
+        if (newCurrentPage > this.props.totalPages) {
             newCurrentPage = (newCurrentPage / 10) | 0;
         }
         this.setState({ currentPage: newCurrentPage });
@@ -40,26 +45,25 @@ export default class Pagination extends Component {
     handleBlur() {
         var newCurrentPage;
         if (
-            this.state.currentPage === "" ||
-            isNaN(this.state.currentPage) ||
+            !this.state.currentPage ||
             this.state.currentPage < 1
         )
-            newCurrentPage = 1;
+            newCurrentPage = this.props.currentPage;
         else newCurrentPage = this.state.currentPage;
         newCurrentPage = Number(newCurrentPage);
         this.handleChange(newCurrentPage);
     }
 
     handleDecrement() {
-        var newCurrentPage = this.state.currentPage - 1;
+        var newCurrentPage = this.props.currentPage - 1;
         if (newCurrentPage < 1) newCurrentPage = 1;
         this.handleChange(newCurrentPage);
     }
 
     handleIncrement() {
-        var newCurrentPage = this.state.currentPage + 1;
-        if (newCurrentPage > this.state.totalPages)
-            newCurrentPage = this.state.totalPages;
+        var newCurrentPage = this.props.currentPage + 1;
+        if (newCurrentPage > this.props.totalPages)
+            newCurrentPage = this.props.totalPages;
         this.handleChange(newCurrentPage);
     }
 
@@ -68,7 +72,7 @@ export default class Pagination extends Component {
             <div className="pagination-container">
                 <FontAwesome
                     className={
-                        this.state.currentPage === 1
+                        this.props.currentPage === 1
                             ? "arrow disabled"
                             : "arrow"
                     }
@@ -85,18 +89,18 @@ export default class Pagination extends Component {
                             onBlur={this.handleBlur}
                             style={{
                                 width:
-                                    (String(this.state.currentPage).length +
+                                    (String(this.props.currentPage).length +
                                         2) *
                                         0.5 +
                                     "rem"
                             }}
                         />
                     </span>
-                    /{this.state.totalPages}
+                    /{this.props.totalPages}
                 </span>
                 <FontAwesome
                     className={
-                        this.state.currentPage === this.state.totalPages
+                        this.props.currentPage === this.props.totalPages
                             ? "arrow disabled"
                             : "arrow"
                     }
@@ -111,5 +115,5 @@ export default class Pagination extends Component {
 Pagination.propTypes = {
     onChange: PropTypes.func.isRequired,
     totalPages: PropTypes.number.isRequired,
-    currentPage: PropTypes.number
+    currentPage: PropTypes.number.isRequired
 };
