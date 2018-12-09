@@ -1,59 +1,88 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "../styles/ImagePreview.css";
-import { contain } from "intrinsic-scale";
 import ResizeObserver from "react-resize-observer";
+import { ReactSVGPanZoom, TOOL_PAN } from "react-svg-pan-zoom";
 
 export default class ImagePreview extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            overlayStyle: {
-                display: "none"
-            }
+            width: 0,
+            height: 0,
+            imageWidth: 0,
+            imageHeight: 0,
+            imageLoaded: false
         };
-        this.imageRef = React.createRef();
+        this.containerRef = React.createRef();
+        this.viewerRef = React.createRef();
+        this.doFirstFit = true;
     }
 
-    moveOverlay() {
-        const img = this.imageRef.current;
-        const info = contain(img.width, img.height, img.naturalWidth, img.naturalHeight);
-        if (isNaN(info.x)) {
+    componentDidMount() {
+        this.handleResize();
+    }
+
+    componentDidUpdate() {
+        if (this.doFirstFit && this.viewerRef.current) {
+            this.fitImage();
+            this.doFirstFit = false;
+        }
+    }
+
+    imageLoaded(e) {
+        this.setState({
+            imageWidth: e.target.naturalWidth,
+            imageHeight: e.target.naturalHeight,
+            imageLoaded: true
+        });
+    }
+
+    fitImage() {
+        this.viewerRef.current.fitToViewer("center", "center");
+    }
+
+    handleResize() {
+        if (!this.containerRef.current) {
             return;
         }
+
         this.setState({
-            overlayStyle: {
-                right: 0,
-                top: info.y,
-                width: info.width,
-                height: info.height,
-                position: "absolute"
-            }
+            width: this.containerRef.current.clientWidth,
+            height: this.containerRef.current.clientHeight
         });
     }
 
     render() {
-        const rects = this.props.boxes.map((coords, index) => (
-            <div key={index} className="img-overlay-wrap-rect" style={{
-                left: coords[0] * 100 + "%",
-                top: coords[1] * 100 + "%",
-                width: coords[2] * 100 + "%",
-                height: coords[3] * 100 + "%",
-            }}></div>
-        ));
+        const rects = this.state.imageLoaded
+            ? this.props.boxes.map((coords, index) =>
+                <rect key={index}
+                    x={coords[0] * this.state.imageWidth}
+                    y={coords[1] * this.state.imageHeight}
+                    width={coords[2] * this.state.imageWidth}
+                    height={coords[3] * this.state.imageHeight}
+                    style={{
+                        fill: "none",
+                        stroke: "blue",
+                        strokeOpacity: 0.5,
+                        strokeWidth: 2
+                    }}></rect>)
+            : [];
 
-        return <div className="img-overlay">
-            <div className="img-overlay-wrap">
-                <img ref={this.imageRef} src={this.props.imageURI} onLoad={this.moveOverlay.bind(this)} />
-                <div style={this.state.overlayStyle}>
-                    <div style={{
-                        position: "relative",
-                        width: "100%",
-                        height: "100%"
-                    }}>{rects}</div>
-                </div>
-            </div>
-            <ResizeObserver onResize={this.moveOverlay.bind(this)}></ResizeObserver>
+        return <div ref={this.containerRef} style={{width: "100%", height: "100%"}}>
+            {this.state.imageLoaded && this.state.width && this.state.height
+                ? <ReactSVGPanZoom ref={this.viewerRef} background="none"
+                    width={this.state.width} height={this.state.height}
+                    tool={TOOL_PAN} toolbarPosition="none" scaleFactorOnWheel={1.04}>
+                    <svg width={this.state.imageWidth} height={this.state.imageHeight}>
+                        <image width={this.state.imageWidth} height={this.state.imageHeight}
+                            xlinkHref={this.props.imageURI}></image>
+                        {rects}
+                    </svg>
+                </ReactSVGPanZoom>
+                : <img src={this.props.imageURI} onLoad={this.imageLoaded.bind(this)}
+                    alt="Loading..." style={{display: "none"}} />
+            }
+            <ResizeObserver onResize={this.handleResize.bind(this)}></ResizeObserver>
         </div>;
     }
 }
