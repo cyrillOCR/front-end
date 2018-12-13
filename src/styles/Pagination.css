@@ -38,7 +38,7 @@
     background: #e5e5e5;
     height: 1rem;
     font-size: 1rem;
-    padding: 10px 0;
+    line-height: 1rem;
 }
 
 .value-input input:focus {
