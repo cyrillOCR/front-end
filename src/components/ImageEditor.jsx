@@ -1,137 +1,87 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Cropper from 'react-cropper'
+import 'cropperjs/dist/cropper.css'
 import '../styles/ImageEditor.css'
 
 export default class ImageEditor extends Component {
     constructor(props) {
         super(props);
-        this.canvas = React.createRef();
-        this.state = {
-            bounds: {
-                width: this.props.width || .5,
-                height: this.props.height || .5,
-                top: this.props.top || .25,
-                left: this.props.left || .25
-            },
-            overlayStyle:{}
-        };
-        this.controlRect = React.createRef();
+        this.cropper = React.createRef()
+        this.mirror = React.createRef()
+        this.state = {}
     }
 
-    getRectLimits(rectBounds) {
-        return {
-            top: 1 - rectBounds.height,
-            left: 1 - rectBounds.width,
-            width: 1 - rectBounds.left,
-            height: 1 - rectBounds.top
-        }
+    getCanvasData() {
+        return this.cropper.current.getCanvasData()
     }
 
-    updateOverlayStyle(){
-        const canvas = this.canvas.current;
-        const style = {
-            top: canvas.offsetTop,
-            right: 0,
-            width: canvas.offsetWidth,
-            height: canvas.offsetHeight,
-            position: 'absolute'
-        }
-        this.setState({overlayStyle: style})
+    getCroppedCanvas() {
+        return this.cropper.current.getCroppedCanvas().toDataURL()
     }
 
-    getRectBounds() {
-        const canvas = this.canvas.current;
-        const rect = this.controlRect.current;
-        const newBounds = {
-            top: rect.offsetTop / canvas.offsetHeight,
-            left: rect.offsetLeft / canvas.offsetWidth,
-            width: rect.offsetWidth / canvas.offsetWidth,
-            height: rect.offsetHeight / canvas.offsetHeight
-        }
-        return newBounds;
-
+    getContainerData() {
+        return this.cropper.current.getContainerData();
     }
 
-    getRectImage(bounds) {
-        const canvas = this.canvas.current;
-        const ctx = canvas.getContext("2d");
-        const image = ctx.getImageData(
-            bounds.left * canvas.width,
-            bounds.top * canvas.height,
-            bounds.width * canvas.width,
-            bounds.height * canvas.height
-        );
-        let newCanvas = document.createElement('canvas');
-        newCanvas.width = image.width;
-        newCanvas.height = image.height;
-        newCanvas.getContext("2d").putImageData(image, 0, 0);
-        return newCanvas.toDataURL();
+    rotateTo(value) {
+        this.cropper.current.rotateTo(value)
     }
 
-    updateRect(bounds) {
-        console.log('intra in updateRect');
-        const newBounds = bounds || this.getRectBounds();
-        const newLimits = this.getRectLimits(newBounds);
-        this.setState({ bounds: newBounds, limits: newLimits })
-        this.props.onChange({ bounds: newBounds, limits: newLimits });
+    moveTo(x, y) {
+        this.cropper.current.moveTo(x, y);
+    }
+
+    scale(value) {
+        this.cropper.current.scale(value);
+    }
+
+    updateBoundings() {
+        this.setState({
+            style: {
+                height: this.mirror.current.clientHeight,
+                width: this.mirror.current.width
+            }
+        })
+        if (this.cropper.current) this.cropper.current.reset()
     }
 
     componentDidMount() {
-        // draw image when component mounts
-        let image = new Image();
-        image.onload = () => {
-            //draw the image on canvas
-            let canvas = this.canvas.current;
-            canvas.width = image.width;
-            canvas.height = image.height;
-            canvas.getContext("2d").drawImage(image, 0, 0);
-
-            // update rect proportions
-            this.updateOverlayStyle();
-            window.addEventListener('resize', this.updateOverlayStyle.bind(this));
-
-            //call onChange callback so that the parent component will have initial values to pass to sliders
-            const defaultLimits = this.getRectLimits(this.state.bounds);
-            this.setState({limits: defaultLimits });
-            this.props.onChange({ bounds: this.state.bounds, limits: this.state.limits });
-        }
-        image.src = this.props.imageURI;
+        window.addEventListener('resize', this.updateBoundings.bind(this));
     }
 
-    componentWillUnmount(){
-        window.removeEventListener('resize', this.updateOverlayStyle.bind(this));
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateBoundings.bind(this));
     }
 
     render() {
         return (
             <div className="image-editor-container">
-                <div className="canvas-container">
-                    <canvas
-                        className="image-editor-canvas"
-                        ref={this.canvas}
-                    ></canvas>
-                    <div style={this.state.overlayStyle}>
-                        <div 
-                            style={{
-                                top: this.state.bounds.top * 100 + '%',
-                                left: this.state.bounds.left * 100 + '%',
-                                width: this.state.bounds.width * 100 + '%',
-                                height: this.state.bounds.height * 100 + '%'
-                            }}
-                            className="control-rect-container"
-                            ref={this.controlRect}></div>
-                    </div>
-                </div>
+                <img
+                    className="image-mirror"
+                    src={this.props.imageURI}
+                    ref={this.mirror}
+                    alt=""
+                    onLoad={this.updateBoundings.bind(this)}
+                />
+                {this.state.style &&
+                    <Cropper
+                        ref={this.cropper}
+                        src={this.props.imageURI}
+                        style={{
+                            height: this.state.style.height,
+                            position: 'absolute',
+                            right: 0,
+                            width: this.state.style.width
+                        }}
+                        zoomOnWheel={false}
+                    />
+                }
             </div>
         )
     }
 }
 
 ImageEditor.propTypes = {
-    imageURI: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    top: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
+    imageURI: PropTypes.string.isRequired
 }
