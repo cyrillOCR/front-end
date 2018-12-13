@@ -12,11 +12,15 @@ export default class Sidekick extends Component {
                 <div className="sidekick-content">
                     {this.props.children}
                 </div>
+                <Pagination onChange={this.props.onChange} currentPage={this.props.currentPage} totalPages={this.props.totalPages} />
             </div>
         )
     }
 }
 
 Sidekick.propTypes = {
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired,
+    totalPages: PropTypes.number.isRequired
 }
