@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import '../styles/Sidekick.css'
 import PropTypes from 'prop-types'
+import Pagination from './Pagination'
 
 export default class Sidekick extends Component {
     render() {
