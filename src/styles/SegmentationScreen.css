@@ -1,0 +1,41 @@
+.segmentation-screen-container {
+    background-color: #f6f6f6;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    margin: 0 auto;
+    padding: 2rem 6rem;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+    
+.segmentation-screen-container .image-preview-container {
+    align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    padding-right: 1rem;
+    width: 100%;
+}
+
+.segmentation-screen-container .sidekick-container-parent {
+    max-width: 800px;
+    padding-left: 1rem;
+    text-align: left;
+    width: 100%;
+}
+
+
+
+.segmentation-screen-container .sidekick-container-parent .slider-control {
+    margin-bottom: 1.5rem;
+    margin-top: 2.5rem;
+}
+
+.segmentation-screen-container .sidekick-container-parent .buttons-control {
+    margin-top: 3.5rem;
+}
+
