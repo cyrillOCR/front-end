@@ -10,14 +10,14 @@ import ButtonsControl from './ButtonsControl';
 
 var boxes = [
     [0.045,0.087,0.065,0.029],
-    [0.13,0.087,0.029,0.029],
-    [0.046,0.192,0.0490,0.029],
-    [0.126,0.192,0.113,0.029],
-    [0.27,0.192,0.066,0.029],
-    [0.353,0.192,0.045,0.029],
-    [0.419,0.192,0.01,0.029],
-    [0.450,0.192,0.095,0.029],
-    [0.593,0.192,0.113,0.029]
+    // [0.13,0.087,0.029,0.029],
+    // [0.046,0.192,0.0490,0.029],
+    // [0.126,0.192,0.113,0.029],
+    // [0.27,0.192,0.066,0.029],
+    // [0.353,0.192,0.045,0.029],
+    // [0.419,0.192,0.01,0.029],
+    // [0.450,0.192,0.095,0.029],
+    // [0.593,0.192,0.113,0.029]
 ];
 
 class SegmentationScreen extends Component {
@@ -88,8 +88,13 @@ class SegmentationScreen extends Component {
     }
 
     render() {
+        // var imagePreview = <ImagePreview 
+        //                     imageURI={`https://www.scriptreaderpro.com/wp-content/uploads/2018/09/Screen-Shot-2018-09-17-at-2.40.21-PM-1024x807.png`}
+        //                     boxes={boxes}/>
+
+
         var imagePreview = <ImagePreview 
-                            imageURI={`https://www.scriptreaderpro.com/wp-content/uploads/2018/09/Screen-Shot-2018-09-17-at-2.40.21-PM-1024x807.png`}
+                            imageURI={`https://sites.ualberta.ca/~lmalcolm/poetry/Bely4.gif`}
                             boxes={boxes}/>
  
         return (    
