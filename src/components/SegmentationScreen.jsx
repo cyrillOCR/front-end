@@ -25,8 +25,6 @@ class SegmentationScreen extends Component {
     constructor(props) {
         super(props);
 
-        console.log('in segmentation screen', props);
-
         this.propsForSidekick = {
             title: `Finding letters...`,
             currentPage: 1,
@@ -90,13 +88,7 @@ class SegmentationScreen extends Component {
     }
 
     render() {
-
-        // const {imageURI, boxes} = this.props;
-
-        console.log('props', this.props.boxes);
-
-        var imagePreview;
-        imagePreview = <ImagePreview 
+        var imagePreview = <ImagePreview 
                             imageURI={`https://www.scriptreaderpro.com/wp-content/uploads/2018/09/Screen-Shot-2018-09-17-at-2.40.21-PM-1024x807.png`}
                             boxes={boxes}/>
  
