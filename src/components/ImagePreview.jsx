@@ -38,7 +38,7 @@ export default class ImagePreview extends Component {
     }
 
     fitImage() {
-        this.viewerRef.current.fitToViewer("center", "center");
+        this.viewerRef.current.fitToViewer("right", "top");
     }
 
     handleResize() {
@@ -62,8 +62,8 @@ export default class ImagePreview extends Component {
                     height={coords[3] * this.state.imageHeight}
                     style={{
                         fill: "none",
-                        stroke: "blue",
-                        strokeOpacity: 0.5,
+                        stroke: "#2a6f9e",
+                        strokeOpacity: 1,
                         strokeWidth: 2
                     }}></rect>)
             : [];
