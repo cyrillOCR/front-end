@@ -8,6 +8,12 @@ import SliderControl from './SliderControl';
 import CheckboxControl from './CheckboxControl';
 import ButtonsControl from './ButtonsControl';
 
+
+
+// An example of image
+// var imageURI = `https://sites.ualberta.ca/~lmalcolm/poetry/Bely4.gif`;
+
+
 var boxes = [
     [0.045,0.087,0.065,0.029],
     // [0.13,0.087,0.029,0.029],
@@ -21,7 +27,6 @@ var boxes = [
 ];
 
 class SegmentationScreen extends Component {
-
     constructor(props) {
         super(props);
 
@@ -55,17 +60,10 @@ class SegmentationScreen extends Component {
         }
 
         this.onChangePage = this.onChangePage.bind(this);
-        this.onChangeThreshold = this.onChangeThreshold.bind(this);
         this.onChangeDilation = this.onChangeDilation.bind(this);
         this.handlePrimary = this.handlePrimary.bind(this);
         this.handleSecondary = this.handleSecondary.bind(this);
         this.handleAuxiliary = this.handleAuxiliary.bind(this);
-    }
-
-
-    onChangeThreshold(threshold) {
-        console.log('threshold', threshold);
-        
     }
 
     onChangeDilation(checked) {
@@ -88,14 +86,12 @@ class SegmentationScreen extends Component {
     }
 
     render() {
-        // var imagePreview = <ImagePreview 
-        //                     imageURI={`https://www.scriptreaderpro.com/wp-content/uploads/2018/09/Screen-Shot-2018-09-17-at-2.40.21-PM-1024x807.png`}
-        //                     boxes={boxes}/>
-
-
-        var imagePreview = <ImagePreview 
-                            imageURI={`https://sites.ualberta.ca/~lmalcolm/poetry/Bely4.gif`}
-                            boxes={boxes}/>
+        const { imageURI, onChangeThreshold } = this.props; 
+        var imagePreview = null;
+        
+        if (imageURI) {
+            imagePreview = <ImagePreview imageURI={imageURI} boxes={boxes}/>
+        }
  
         return (    
             <div className="segmentation-screen-container">
@@ -117,7 +113,7 @@ class SegmentationScreen extends Component {
                                 label={this.propsForThresholdSlider.label} 
                                 unit={this.propsForThresholdSlider.unit}
                                 step={this.propsForThresholdSlider.step} 
-                                onChange={this.onChangeThreshold} />
+                                onChange={onChangeThreshold} />
                         </div>
                         <div className="checkbox-control">
                             <CheckboxControl
@@ -142,6 +138,12 @@ class SegmentationScreen extends Component {
             </div>
         );
     }
+}
+
+
+SegmentationScreen.propTypes = {
+    imageURI: PropTypes.string.isRequired,
+    onChangeThreshold: PropTypes.func.isRequired
 }
 
 export default SegmentationScreen;
