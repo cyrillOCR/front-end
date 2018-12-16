@@ -43,10 +43,7 @@ export default class SliderControl extends Component {
                             value={this.state.value}
                             onChange={this.handleChange}
                             style={{
-                                width:
-                                    (String(this.props.maxValue).length + 2) *
-                                        0.7 +
-                                    "rem"
+                                width: (String(parseInt(this.props.maxValue, 10)).length+2) * .7 + 'rem'
                             }}
                         />
                     </span>
