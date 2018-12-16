@@ -1,50 +1,65 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import FontAwesome from 'react-fontawesome'
-import '../styles/SliderControl.css'
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import FontAwesome from "react-fontawesome";
+import "../styles/SliderControl.css";
 
 export default class SliderControl extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.handleReset = this.handleReset.bind(this);
         let defaultValue = this.props.defaultValue;
-        
-        if(!defaultValue)
+
+        if (!defaultValue)
             defaultValue = (this.props.maxValue + this.props.minValue) / 2;
-        
+
         this.state = {
             value: defaultValue
         };
     }
 
-    handleChange(e){
+    handleReset() {
+        this.setState({ value: this.props.defaultValue });
+        this.props.onChange(this.props.defaultValue);
+    }
+
+    handleChange(e) {
         const value = e.target.value;
-        this.setState({value})
+        this.setState({ value });
         this.props.onChange(value);
     }
-	render() {
 
-		return (
-			<div className="slider-control-container">
-				<div className="label-container">
+    render() {
+        return (
+            <div className="slider-control-container">
+                <div className="label-container">
                     <span className="label-icon">
-                        <FontAwesome name={this.props.iconName} /> 
+                        <FontAwesome name={this.props.iconName} />
                     </span>
-                    <span className="label-text">
-                        {this.props.label}:
-                    </span>
+                    <span className="label-text">{this.props.label}:</span>
                     <span className="value-input">
                         <input
                             type="text"
                             value={this.state.value}
                             onChange={this.handleChange}
                             style={{
-                                width: (String(this.props.maxValue).length+2) * .7 + 'rem'
+                                width:
+                                    (String(this.props.maxValue).length + 2) *
+                                        0.7 +
+                                    "rem"
                             }}
                         />
                     </span>
                     {this.props.unit && (
                         <span className="unit">{this.props.unit}</span>
+                    )}
+                    {this.props.defaultValue !== this.state.value && (
+                        <span
+                            className="reset-button"
+                            onClick={this.handleReset}
+                        >
+                            Reset
+                        </span>
                     )}
                 </div>
                 <div className="range-container">
@@ -57,10 +72,9 @@ export default class SliderControl extends Component {
                         step={this.props.step}
                     />
                 </div>
-			</div>
-		)
+            </div>
+        );
     }
-    
 }
 
 SliderControl.propTypes = {
@@ -70,6 +84,6 @@ SliderControl.propTypes = {
     unit: PropTypes.string,
     minValue: PropTypes.number.isRequired,
     maxValue: PropTypes.number.isRequired,
-    defaultValue: PropTypes.number,
+    defaultValue: PropTypes.number.isRequired,
     step: PropTypes.number.isRequired
-}
+};
