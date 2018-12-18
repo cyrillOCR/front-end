@@ -11,10 +11,13 @@ export default class ImageAdjustmentScreen extends Component {
         super(props);
         this.state = { image: this.props.imageURI }
         this.imageEditor = React.createRef();
-        this.sliders = []
+        this.sliders = {
+            scale: React.createRef(),
+            rotation: React.createRef(),
+            posX: React.createRef(),
+            posY: React.createRef()
+        }
     }
-
-
 
     handleRotation(value) {
         this.imageEditor.current.rotateTo(value);
@@ -35,8 +38,8 @@ export default class ImageAdjustmentScreen extends Component {
     }
 
     handleReset() {
-        for(let slider of this.sliders){
-            slider.handleReset();
+        for (const slider in this.sliders) {
+            this.sliders[slider].current.handleReset();
         }
     }
 
@@ -75,7 +78,7 @@ export default class ImageAdjustmentScreen extends Component {
                                     defaultValue={0}
                                     step={0.01}
                                     onChange={this.handleRotation.bind(this)}
-                                    ref={(ref) => this.sliders.push(ref)}
+                                    ref={this.sliders.rotation}
                                     unit='deg'
                                 />
                             </div>
@@ -89,7 +92,7 @@ export default class ImageAdjustmentScreen extends Component {
                                     step={0.01}
                                     unit='%'
                                     onChange={this.handleHorizontalMoving.bind(this)}
-                                    ref={(ref) => this.sliders.push(ref)}
+                                    ref={this.sliders.posX}
                                 />
                                 <SliderControl
                                     label="Position-Y"
@@ -100,11 +103,10 @@ export default class ImageAdjustmentScreen extends Component {
                                     step={0.01}
                                     unit='%'
                                     onChange={this.handleVerticalMoving.bind(this)}
-                                    ref={(ref) => this.sliders.push(ref)}
+                                    ref={this.sliders.posY}
                                 />
                             </div>
                             <div className="ia-slider-control-container">
-
                                 <SliderControl
                                     label="Scale"
                                     iconName="expand"
@@ -113,7 +115,7 @@ export default class ImageAdjustmentScreen extends Component {
                                     defaultValue={1}
                                     step={0.01}
                                     onChange={this.handleScaling.bind(this)}
-                                    ref={(ref) => this.sliders.push(ref)}
+                                    ref={this.sliders.scale}
                                 />
                             </div>
                             <ButtonsControl
