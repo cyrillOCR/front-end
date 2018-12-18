@@ -9,11 +9,12 @@ import '../styles/ImageAdjustmentScreen.css'
 export default class ImageAdjustmentScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = {image: this.props.imageURI}
+        this.state = { image: this.props.imageURI }
         this.imageEditor = React.createRef();
+        this.sliders = []
     }
 
-    
+
 
     handleRotation(value) {
         this.imageEditor.current.rotateTo(value);
@@ -25,19 +26,21 @@ export default class ImageAdjustmentScreen extends Component {
 
     handleHorizontalMoving(xPos) {
         const canvasData = this.imageEditor.current.getCanvasData();
-        this.imageEditor.current.moveTo(xPos * canvasData.width, canvasData.top);
+        this.imageEditor.current.moveTo(xPos * canvasData.width / 100, canvasData.top);
     }
 
     handleVerticalMoving(yPos) {
         const canvasData = this.imageEditor.current.getCanvasData();
-        this.imageEditor.current.moveTo(canvasData.left, yPos * canvasData.height);
+        this.imageEditor.current.moveTo(canvasData.left, yPos * canvasData.height / 100);
     }
 
-    handleReset(){
-        console.log('reset');
+    handleReset() {
+        for(let slider of this.sliders){
+            slider.handleReset();
+        }
     }
 
-    handleSubmit(e){
+    handleSubmit(e) {
         const croppedImageData = this.imageEditor.current.getCroppedCanvas();
         this.props.onSubmit(croppedImageData);
     }
@@ -57,49 +60,63 @@ export default class ImageAdjustmentScreen extends Component {
                         </div>
                     </div>
                     <div className="ia-right-column">
-                        <Sidekick 
-                            title="Title"
+                        <Sidekick
+                            title={this.props.title || 'Image adjusting...'}
                             currentPage={this.props.currentPage}
                             totalPages={this.props.totalPages}
                             onChange={this.props.onPageChange}
-                            >
-                            <SliderControl
-                                label="Rotation"
-                                iconName="sync-alt"
-                                minValue={-90}
-                                maxValue={90}
-                                defaultValue={0}
-                                step={0.01}
-                                onChange={this.handleRotation.bind(this)}
-                            />
-                            <SliderControl
-                                label="X-pos"
-                                iconName="arrows-alt-h"
-                                minValue={-1}
-                                maxValue={1}
-                                defaultValue={0}
-                                step={0.01}
-                                onChange={this.handleHorizontalMoving.bind(this)}
-                            />
-                            <SliderControl
-                                label="Y-pos"
-                                iconName="arrows-alt-v"
-                                minValue={-1}
-                                maxValue={1}
-                                defaultValue={0}
-                                step={0.01}
-                                onChange={this.handleVerticalMoving.bind(this)}
-                            />
-                            <SliderControl
-                                label="Scaling"
-                                iconName="expand"
-                                minValue={.5}
-                                maxValue={1.5}
-                                defaultValue={1}
-                                step={0.01}
-                                onChange={this.handleScaling.bind(this)}
-                            />
-                            <ButtonsControl 
+                        >
+                            <div className="ia-slider-control-container">
+                                <SliderControl
+                                    label="Rotation"
+                                    iconName="sync-alt"
+                                    minValue={-90}
+                                    maxValue={90}
+                                    defaultValue={0}
+                                    step={0.01}
+                                    onChange={this.handleRotation.bind(this)}
+                                    ref={(ref) => this.sliders.push(ref)}
+                                    unit='deg'
+                                />
+                            </div>
+                            <div className="ia-slider-control-container">
+                                <SliderControl
+                                    label="Position-X"
+                                    iconName="arrows-alt-h"
+                                    minValue={-100}
+                                    maxValue={100}
+                                    defaultValue={0}
+                                    step={0.01}
+                                    unit='%'
+                                    onChange={this.handleHorizontalMoving.bind(this)}
+                                    ref={(ref) => this.sliders.push(ref)}
+                                />
+                                <SliderControl
+                                    label="Position-Y"
+                                    iconName="arrows-alt-v"
+                                    minValue={-100}
+                                    maxValue={100}
+                                    defaultValue={0}
+                                    step={0.01}
+                                    unit='%'
+                                    onChange={this.handleVerticalMoving.bind(this)}
+                                    ref={(ref) => this.sliders.push(ref)}
+                                />
+                            </div>
+                            <div className="ia-slider-control-container">
+
+                                <SliderControl
+                                    label="Scale"
+                                    iconName="expand"
+                                    minValue={.5}
+                                    maxValue={1.5}
+                                    defaultValue={1}
+                                    step={0.01}
+                                    onChange={this.handleScaling.bind(this)}
+                                    ref={(ref) => this.sliders.push(ref)}
+                                />
+                            </div>
+                            <ButtonsControl
                                 primaryLabel="Save"
                                 iconLabel="check"
                                 secondaryLabel="Cancel"
@@ -122,5 +139,6 @@ ImageAdjustmentScreen.propTypes = {
     onCancel: PropTypes.func.isRequired,
     onPageChange: PropTypes.func.isRequired,
     currentPage: PropTypes.number.isRequired,
-    totalPages: PropTypes.number.isRequired
+    totalPages: PropTypes.number.isRequired,
+    title: PropTypes.string
 }

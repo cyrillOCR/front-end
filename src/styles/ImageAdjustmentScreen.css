@@ -32,3 +32,19 @@
     flex-grow: 1;
     padding: 1rem;
 }
+
+.ia-slider-control-container{
+    display: flex;
+}
+
+.ia-slider-control-container .slider-control-container{
+    margin-left: 1rem;
+}
+
+.ia-slider-control-container .slider-control-container:first-child{
+    margin-left: 0;
+}
+
+.ia-right-column{
+    display: flex;
+}
