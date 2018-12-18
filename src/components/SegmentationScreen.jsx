@@ -8,32 +8,12 @@ import SliderControl from './SliderControl';
 import CheckboxControl from './CheckboxControl';
 import ButtonsControl from './ButtonsControl';
 
-
-
-// An example of image
-// var imageURI = `https://sites.ualberta.ca/~lmalcolm/poetry/Bely4.gif`;
-
-
-var boxes = [
-    [0.045,0.087,0.065,0.029],
-    // [0.13,0.087,0.029,0.029],
-    // [0.046,0.192,0.0490,0.029],
-    // [0.126,0.192,0.113,0.029],
-    // [0.27,0.192,0.066,0.029],
-    // [0.353,0.192,0.045,0.029],
-    // [0.419,0.192,0.01,0.029],
-    // [0.450,0.192,0.095,0.029],
-    // [0.593,0.192,0.113,0.029]
-];
-
 class SegmentationScreen extends Component {
     constructor(props) {
         super(props);
 
         this.propsForSidekick = {
-            title: `Finding letters...`,
-            currentPage: 1,
-            totalPages: 1
+            title: `Finding letters...`
         }
 
         this.propsForThresholdSlider = {
@@ -58,35 +38,21 @@ class SegmentationScreen extends Component {
             auxiliaryLabel: 'Adjust image',
             iconLabel: 'fas fa-search'
         }
-
-        this.onChangePage = this.onChangePage.bind(this);
-        this.onChangeDilation = this.onChangeDilation.bind(this);
-        this.handlePrimary = this.handlePrimary.bind(this);
-        this.handleSecondary = this.handleSecondary.bind(this);
-        this.handleAuxiliary = this.handleAuxiliary.bind(this);
     }
-
-    onChangeDilation(checked) {
-        console.log('checked', checked);
-    }
-
-    handlePrimary() {
-        console.log('handlePrimary');
-    }
-
-    handleSecondary() {
-        console.log('handleSecondary');
-    }
-    handleAuxiliary() {
-        console.log('handleAuxiliary');
-    }
-
-    onChangePage() {
-        console.log('onChangePage');
-    }
-
+    
     render() {
-        const { imageURI, onChangeThreshold } = this.props; 
+        const { 
+            imageURI,
+            boxes,
+            currentPage,
+            totalPages,
+            handlePrimary, 
+            handleSecondary, 
+            handleAuxiliary,
+            onChangePage,
+            onChangeDilation,
+            onChangeThreshold
+        } = this.props; 
         var imagePreview = null;
         
         if (imageURI) {
@@ -101,9 +67,9 @@ class SegmentationScreen extends Component {
                 <div className="sidekick-container-parent">
                     <Sidekick 
                         title={this.propsForSidekick.title} 
-                        onChange={this.onChangePage} 
-                        currentPage={this.propsForSidekick.currentPage} 
-                        totalPages={this.propsForSidekick.totalPages}>
+                        onChange={onChangePage} 
+                        currentPage={currentPage} 
+                        totalPages={totalPages}>
                         <div className="slider-control">
                             <SliderControl
                                 maxValue={this.propsForThresholdSlider.maxValue} 
@@ -120,14 +86,14 @@ class SegmentationScreen extends Component {
                                 defaultValue={this.propsForDilationCheckbox.defaultValue}
                                 label={this.propsForDilationCheckbox.label}
                                 tooltipText={this.propsForDilationCheckbox.toolTipText}
-                                onChange={this.onChangeDilation} />
+                                onChange={onChangeDilation} />
                         </div>
                         
                         <div className="buttons-control">
                             <ButtonsControl
-                                handlePrimary={this.handlePrimary}
-                                handleSecondary={this.handleSecondary}
-                                handleAuxiliary={this.handleAuxiliary}
+                                handlePrimary={handlePrimary}
+                                handleSecondary={handleSecondary}
+                                handleAuxiliary={handleAuxiliary}
                                 primaryLabel={this.propsForButtonsControl.primaryLabel}
                                 secondaryLabel={this.propsForButtonsControl.secondaryLabel}
                                 auxiliaryLabel={this.propsForButtonsControl.auxiliaryLabel}
@@ -140,10 +106,17 @@ class SegmentationScreen extends Component {
     }
 }
 
-
 SegmentationScreen.propTypes = {
     imageURI: PropTypes.string.isRequired,
-    onChangeThreshold: PropTypes.func.isRequired
+    boxes: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+    currentPage: PropTypes.number.isRequired,
+    totalPages: PropTypes.number.isRequired,
+    handlePrimary: PropTypes.func.isRequired, 
+    handleSecondary: PropTypes.func.isRequired, 
+    handleAuxiliary: PropTypes.func.isRequired,
+    onChangePage: PropTypes.func.isRequired,
+    onChangeDilation: PropTypes.func.isRequired,
+    onChangeThreshold: PropTypes.func.isRequired,
 }
 
 export default SegmentationScreen;
