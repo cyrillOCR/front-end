@@ -1,0 +1,49 @@
+.ia-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    background: #f6f6f6;
+    width: 100%;
+    height: 100%;
+}
+
+.ia-content-wrapper {
+    width: 100%;
+    max-width: 1024px;
+    padding: 2rem 1rem;
+    margin: 0 auto;
+    display: flex;
+}
+
+.ia-left-column {
+    width: 50%;
+    padding: 1rem;
+    display: flex;
+}
+
+.ia-right-column {
+    width: 50%;
+    padding: 1rem;
+}
+
+.ia-image-editor-container {
+    position: relative;
+    flex-grow: 1;
+}
+
+.ia-slider-control-container {
+    display: flex;
+}
+
+.ia-slider-control-container .slider-control-container {
+    margin-left: 1rem;
+}
+
+.ia-slider-control-container .slider-control-container:first-child {
+    margin-left: 0;
+}
+
+.ia-right-column {
+    display: flex;
+}
