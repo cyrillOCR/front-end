@@ -9,7 +9,6 @@ import '../styles/ImageAdjustmentScreen.css'
 export default class ImageAdjustmentScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = { image: this.props.imageURI }
         this.imageEditor = React.createRef();
         this.sliders = {
             scale: React.createRef(),
@@ -20,19 +19,23 @@ export default class ImageAdjustmentScreen extends Component {
     }
 
     handleRotation(value) {
+        if (!this.imageEditor.current) return;
         this.imageEditor.current.rotateTo(value);
     }
 
     handleScaling(value) {
+        if (!this.imageEditor.current) return;
         this.imageEditor.current.scale(value);
     }
 
     handleHorizontalMoving(xPos) {
+        if (!this.imageEditor.current) return;
         const canvasData = this.imageEditor.current.getCanvasData();
         this.imageEditor.current.moveTo(xPos * canvasData.width / 100, canvasData.top);
     }
 
     handleVerticalMoving(yPos) {
+        if (!this.imageEditor.current) return;
         const canvasData = this.imageEditor.current.getCanvasData();
         this.imageEditor.current.moveTo(canvasData.left, yPos * canvasData.height / 100);
     }
@@ -54,11 +57,10 @@ export default class ImageAdjustmentScreen extends Component {
                 <div className="ia-content-wrapper">
                     <div className="ia-left-column">
                         <div className="ia-image-editor-container">
-                            {this.state.image &&
+                            {this.props.imageURI &&
                                 <ImageEditor
                                     ref={this.imageEditor}
-                                    imageURI={this.state.image}
-
+                                    imageURI={this.props.imageURI}
                                 />}
                         </div>
                     </div>
