@@ -34,41 +34,45 @@ export default class TextRecognitionScreen extends Component {
         } = this.props;
 
         return (
-            <div className="text-recognition-screen-container">
-                <div className="image-preview-container">
-                    {imageURI && (
-                        <ImagePreview imageURI={imageURI} boxes={boxes} />
-                    )}
-                </div>
-                <div className="sidekick-container-parent">
-                    <Sidekick
-                        title={this.propsForSidekick.title}
-                        onChange={onChangePage}
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                    >
-                        <TextArea text={this.props.textAreaContent} />
+            <div className="container">
+                <div className="content-wrapper">
+                    <div className="left-column">
+                        {imageURI && (
+                            <ImagePreview imageURI={imageURI} boxes={boxes} />
+                        )}
+                    </div>
+                    <div className="right-column">
+                        <Sidekick
+                            title={this.propsForSidekick.title}
+                            onChange={onChangePage}
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                        >
+                            <TextArea text={this.props.textAreaContent} />
 
-                        <div className="buttons-control">
-                            <ButtonsControl
-                                handlePrimary={handlePrimary}
-                                handleSecondary={handleSecondary}
-                                handleAuxiliary={handleAuxiliary}
-                                primaryLabel={
-                                    this.propsForButtonsControl.primaryLabel
-                                }
-                                secondaryLabel={
-                                    this.propsForButtonsControl.secondaryLabel
-                                }
-                                auxiliaryLabel={
-                                    this.propsForButtonsControl.auxiliaryLabel
-                                }
-                                iconLabel={
-                                    this.propsForButtonsControl.iconLabel
-                                }
-                            />
-                        </div>
-                    </Sidekick>
+                            <div className="buttons-control">
+                                <ButtonsControl
+                                    handlePrimary={handlePrimary}
+                                    handleSecondary={handleSecondary}
+                                    handleAuxiliary={handleAuxiliary}
+                                    primaryLabel={
+                                        this.propsForButtonsControl.primaryLabel
+                                    }
+                                    secondaryLabel={
+                                        this.propsForButtonsControl
+                                            .secondaryLabel
+                                    }
+                                    auxiliaryLabel={
+                                        this.propsForButtonsControl
+                                            .auxiliaryLabel
+                                    }
+                                    iconLabel={
+                                        this.propsForButtonsControl.iconLabel
+                                    }
+                                />
+                            </div>
+                        </Sidekick>
+                    </div>
                 </div>
             </div>
         );
