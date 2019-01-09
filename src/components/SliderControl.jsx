@@ -57,7 +57,7 @@ export default class SliderControl extends Component {
                             value={this.state.value}
                             onChange={this.handleChange}
                             style={{
-                                width: (String(parseInt(this.state.value, 10)).length+2) * .4 + 'rem'
+                                width: (String(parseFloat(this.state.value)).length+2) * .4 + 'rem'
                             }}
                             {...onBlurProp}
                         />
