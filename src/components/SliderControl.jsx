@@ -28,10 +28,24 @@ export default class SliderControl extends Component {
     handleChange(e) {
         const value = e.target.value;
         this.setState({ value });
+
+        //call the callback on every step if 'onMouseUp' event is not specified
+        if (!this.props.update || this.props.update === 'all')
+            this.props.onChange(value);
+    }
+
+    handleValueUpdate(e){
+        const value = e.target.value;
         this.props.onChange(value);
     }
 
     render() {
+        let onMouseUpProp = {}; // prop for range input
+        let onBlurProp = {}; // prop for value input
+        if (this.props.update === 'final')
+            onMouseUpProp['onMouseUp'] = this.handleValueUpdate.bind(this);
+            onBlurProp['onBlur'] = this.handleValueUpdate.bind(this);
+
         return (
             <div className="slider-control-container">
                 <div className="label-container">
@@ -45,8 +59,9 @@ export default class SliderControl extends Component {
                             value={this.state.value}
                             onChange={this.handleChange}
                             style={{
-                                width: (String(parseInt(this.props.maxValue, 10)).length+2) * .7 + 'rem'
+                                width: (String(parseFloat(this.state.value)).length+2) * .4 + 'rem'
                             }}
+                            {...onBlurProp}
                         />
                     </span>
                     {this.props.unit && (
@@ -69,6 +84,7 @@ export default class SliderControl extends Component {
                         value={this.state.value}
                         onChange={this.handleChange}
                         step={this.props.step}
+                        {...onMouseUpProp}
                     />
                 </div>
             </div>
@@ -84,5 +100,6 @@ SliderControl.propTypes = {
     minValue: PropTypes.number.isRequired,
     maxValue: PropTypes.number.isRequired,
     defaultValue: PropTypes.number.isRequired,
-    step: PropTypes.number.isRequired
+    step: PropTypes.number.isRequired,
+    update: PropTypes.oneOf(['all', 'final'])
 };

@@ -72,6 +72,7 @@
     font-size: 1rem;
     cursor: pointer;
     color: #242424;
+    padding-top: 6px;
 }
 
 .reset-button:hover{
@@ -80,4 +81,8 @@
 
 .slider-control-container:hover .reset-button{
     visibility: visible;
+}
+
+.label-text{
+    font-size: 18px;
 }
