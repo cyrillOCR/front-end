@@ -48,8 +48,7 @@ class SegmentationScreen extends Component {
             defaultValue: true,
             label: 'Dilation',
             toolTipText: 
-                `Dilation can be true or false, by default is true. 
-                If set, it dilates and erosions the characters, making them more clear,
+                `If set, it dilates and erosions the characters, making them more clear,
                 but has very long execution time.`
         }
 
@@ -57,8 +56,7 @@ class SegmentationScreen extends Component {
             defaultValue: false,
             label: 'Noise Reduction',
             toolTipText: 
-                `NoiseReduction can be false or true, by default it is false. 
-                If set, it totally removes the noise of the image, making it 
+                `If set, it totally removes the noise of the image, making it 
                 sharp and clear but increases the execution time.`
         }
 
@@ -112,7 +110,8 @@ class SegmentationScreen extends Component {
                                 label={this.propsForContrastFactorSlider.label} 
                                 unit={this.propsForContrastFactorSlider.unit}
                                 step={this.propsForContrastFactorSlider.step} 
-                                onChange={onChangeContrastFactor} />
+                                onChange={onChangeContrastFactor} 
+                                update='final'/>
                         </div>
 
                         <div className="slider-control">
@@ -124,7 +123,8 @@ class SegmentationScreen extends Component {
                                 label={this.propsForSegmentationFactorSlider.label} 
                                 unit={this.propsForSegmentationFactorSlider.unit}
                                 step={this.propsForSegmentationFactorSlider.step} 
-                                onChange={onChangeSegmentationFactor} />
+                                onChange={onChangeSegmentationFactor} 
+                                update='final'/>
                         </div>
 
                         <div className="slider-control">
@@ -136,7 +136,8 @@ class SegmentationScreen extends Component {
                                 label={this.propsForSeparationFactorSlider.label} 
                                 unit={this.propsForSeparationFactorSlider.unit}
                                 step={this.propsForSeparationFactorSlider.step} 
-                                onChange={onChangeSeparationFactor} />
+                                onChange={onChangeSeparationFactor} 
+                                update='final'/>
                         </div>
 
 
