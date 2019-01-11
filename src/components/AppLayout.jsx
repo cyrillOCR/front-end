@@ -59,10 +59,10 @@ export default class AppLayout extends Component {
         this.newImageData = {};
         return <ImageUploadScreen
             callback={(files) => {
-                this.setState({ loading: true });
+                this.setState({loading: true});
                 this.imageUploadCallback(files).then(uris => {
                     this.imageURIs = uris;
-                    this.setState({ loading: false });
+                    this.setState({loading: false});
                     history.push("/1/adjust");
                 });
             }} />;

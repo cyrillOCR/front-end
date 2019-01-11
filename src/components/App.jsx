@@ -6,9 +6,9 @@ import axios from 'axios';
 
 class App extends Component {
   getImageDimensions(file) {
-    return new Promise(function (resolved, rejected) {
+    return new Promise (function (resolved, rejected) {
       var i = new Image();
-      i.onload = function () {
+      i.onload = function(){
         resolved([i.width, i.height]);
       };
       i.src = file;
