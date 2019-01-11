@@ -59,10 +59,10 @@ export default class AppLayout extends Component {
         this.newImageData = {};
         return <ImageUploadScreen
             callback={(files) => {
-                this.setState({loading: true});
+                this.setState({ loading: true });
                 this.imageUploadCallback(files).then(uris => {
                     this.imageURIs = uris;
-                    this.setState({loading: false});
+                    this.setState({ loading: false });
                     history.push("/1/adjust");
                 });
             }} />;
@@ -101,22 +101,38 @@ export default class AppLayout extends Component {
         return <Async
             promiseFn={this.props.segmentationCallback}
             imageURI={this.getAdjustedPage(page)}
-            segmentationThreshold={this.state.segmentationThreshold || 100}
-            segmentationDaw={this.state.segmentationDaw || false}
-            watch={JSON.stringify([page, this.state.segmentationThreshold, this.state.segmentationDaw])}>
+            contrastFactor={this.state.contrastFactor || 1.5}
+            applyDilation={this.state.applyDilation || false}
+            applyNoiseReduction={this.state.noiseReduction || false}
+            segmentationFactor={this.state.segmentationFactor || 0.5}
+            separationFactor={this.state.separationFactor || 3}
+            watch={JSON.stringify([
+                page,
+                this.state.contrastFactor,
+                this.state.applyDilation,
+                this.state.applyNoiseReduction,
+                this.state.segmentationFactor,
+                this.state.separationFactor
+            ])}>
             <Async.Loading initial><LoadingOverlay /></Async.Loading>
             <Async.Resolved persist>
                 {data => <SegmentationScreen
-                    imageURI={this.getAdjustedPage(page)}
+                    imageURI={data.payload}
                     onChangePage={page => history.push(`/${page}/segmentation`)}
                     currentPage={page}
                     totalPages={this.totalPages}
-                    onChangeThreshold={value => this.setState({segmentationThreshold: value})}
-                    onChangeDilation={value => this.setState({segmentationDaw: value})}
-                    boxes={data}
+                    onChangeContrastFactor={contrastFactor => this.setState({ contrastFactor })}
+                    onChangeApplyDilation={applyDilation => this.setState({ applyDilation })}
+                    onChangeApplyNoiseReduction={applyNoiseReduction => this.setState({ applyNoiseReduction })}
+                    onChangeSegmentationFactor={segmentationFactor => this.setState({ segmentationFactor })}
+                    onChangeSeparationFactor={separationFactor => this.setState({ separationFactor })}
+                    boxes={data.coords}
                     handlePrimary={() => history.push(`/${page}/recognition`)}
                     handleAuxiliary={() => history.push(`/${page}/adjust`)} />}
             </Async.Resolved>
+            <Async.Rejected>
+                {err => <div>{err}</div>}
+            </Async.Rejected>
         </Async>;
     }
 

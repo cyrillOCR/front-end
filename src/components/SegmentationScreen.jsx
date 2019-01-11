@@ -183,8 +183,8 @@ SegmentationScreen.propTypes = {
     handleSecondary: PropTypes.func.isRequired, 
     handleAuxiliary: PropTypes.func.isRequired,
     onChangePage: PropTypes.func.isRequired,
-    onChangeDilation: PropTypes.func.isRequired,
-    onChangeNoiseReduction: PropTypes.func.isRequired,
+    onChangeApplyDilation: PropTypes.func.isRequired,
+    onChangeApplyNoiseReduction: PropTypes.func.isRequired,
     onChangeContrastFactor: PropTypes.func.isRequired,
     onChangeSegmentationFactor: PropTypes.func.isRequired,
     onChangeSeparationFactor: PropTypes.func.isRequired
