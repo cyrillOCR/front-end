@@ -103,7 +103,7 @@ export default class AppLayout extends Component {
             imageURI={this.getAdjustedPage(page)}
             contrastFactor={this.state.contrastFactor || 1.5}
             applyDilation={this.state.applyDilation || false}
-            applyNoiseReduction={this.state.noiseReduction || false}
+            applyNoiseReduction={this.state.applyNoiseReduction || false}
             segmentationFactor={this.state.segmentationFactor || 0.5}
             separationFactor={this.state.separationFactor || 3}
             watch={JSON.stringify([
@@ -114,7 +114,7 @@ export default class AppLayout extends Component {
                 this.state.segmentationFactor,
                 this.state.separationFactor
             ])}>
-            <Async.Loading initial><LoadingOverlay /></Async.Loading>
+            <Async.Loading><LoadingOverlay /></Async.Loading>
             <Async.Resolved persist>
                 {data => <SegmentationScreen
                     imageURI={data.payload}
@@ -131,7 +131,10 @@ export default class AppLayout extends Component {
                     handleAuxiliary={() => history.push(`/${page}/adjust`)} />}
             </Async.Resolved>
             <Async.Rejected>
-                {err => <div>{err}</div>}
+                {err => {
+                    console.log(err);
+                    return <div>Error. check console.</div>
+                }}
             </Async.Rejected>
         </Async>;
     }

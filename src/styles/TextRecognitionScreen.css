@@ -37,7 +37,7 @@
 }
 
 .slider-control-container {
-    display: flex;
+    /* display: flex; */
 }
 
 .slider-control-container .slider-control-container {
