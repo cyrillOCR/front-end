@@ -23,7 +23,7 @@ class SegmentationScreen extends Component {
         this.propsForContrastFactorSlider = {
             maxValue: 3,
             minValue: 1,
-            defaultValue: 1.5,
+            defaultValue: parseFloat(this.props.defaultValues.contrastFactor) || 1.5,
             step: 0.01,
             iconName: 'fas fa-adjust',
             label: 'Contrast'
@@ -32,16 +32,16 @@ class SegmentationScreen extends Component {
         this.propsForSegmentationFactorSlider = {
             maxValue: 0.7,
             minValue: 0.3,
-            defaultValue: 0.5,
+            defaultValue: parseFloat(this.props.defaultValues.segmentationFactor) || 0.5,
             step: 0.01,
             iconName: 'fas fa-adjust',
-            label: 'Segmentaion'
+            label: 'Segmentation'
         }
 
         this.propsForSeparationFactorSlider = {
             maxValue: 8,
             minValue: 2,
-            defaultValue: 3,
+            defaultValue: parseInt(this.props.defaultValues.separationFactor) || 3,
             step: 1,
             unit: 'px',
             iconName: 'fas fa-adjust',
@@ -49,13 +49,13 @@ class SegmentationScreen extends Component {
         }
 
         this.propsForApplyDilationCheckbox = {
-            defaultValue: false,
+            defaultValue: this.props.defaultValues.applyDilation || false,
             label: 'Dilation',
             tooltipText: 'Better character spotting, increases the execution time.'
         }
 
         this.propsForApplyNoiseReductionCheckbox = {
-            defaultValue: false,
+            defaultValue: this.props.defaultValues.applyNoiseReduction || false,
             label: 'Noise Reduction',
             tooltipText: 'Image noise reduction, increases the execution time.'
         }
@@ -155,7 +155,8 @@ SegmentationScreen.propTypes = {
     onChangeApplyNoiseReduction: PropTypes.func.isRequired,
     onChangeContrastFactor: PropTypes.func.isRequired,
     onChangeSegmentationFactor: PropTypes.func.isRequired,
-    onChangeSeparationFactor: PropTypes.func.isRequired
+    onChangeSeparationFactor: PropTypes.func.isRequired,
+    defaultValues: PropTypes.object
 }
 
 export default SegmentationScreen;
