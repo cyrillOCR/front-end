@@ -15,17 +15,30 @@ export default class AppLayout extends Component {
         super(props);
         this.newImageData = {};
         this.state = {
-            loading: false
+            loading: false,
+            prevScreen: '',
+            currentScreen: ''
         };
     }
 
     onPageAdjustmentSubmit(currentPage, history, newData) {
-        this.newImageData[currentPage - 1] = newData;
-        history.push(`/${currentPage}/segmentation`);
+        this.props.updateAdjustedImage(currentPage, newData);
+        this.setActivePage(currentPage, history, 'segmentation')
     }
 
     getAdjustedPage(currentPage) {
-        return this.newImageData[currentPage - 1] || this.imageURIs[currentPage - 1];
+        const data = this.props.data[currentPage] || {};
+        return data.adjusted || data.original;
+    }
+
+    setActivePage(page, history, screen) {
+        if (screen === '') {
+            history.push('/');
+            page = 1;
+        }
+        else history.push(`/${page}/${screen}`);
+        console.log(page, history, screen);
+        this.setState({ page, prevScreen: this.state.currentScreen, currentScreen: screen });
     }
 
     get imageUploadCallback() {
@@ -38,17 +51,16 @@ export default class AppLayout extends Component {
     }
 
     get totalPages() {
-        return this.imageURIs.length;
+        return Object.keys(this.props.data).length;
     }
 
     shouldStop(history, match) {
         const page = this.currentPage(match);
-
-        if (!this.imageURIs || this.imageURIs.length < 1) {
-            history.push("/");
+        if (!this.props.data[page] || this.props.data[page].length < 1) {
+            this.setActivePage(1, history, '');
             return true;
-        } else if (!this.imageURIs[page - 1]) {
-            history.push("/1/adjust");
+        } else if (!this.props.data[page]) {
+            this.setActivePage(1, history, this.state.currentScreen);
             return true;
         } else {
             return false;
@@ -56,14 +68,15 @@ export default class AppLayout extends Component {
     }
 
     renderImageUploadScreen({ history }) {
-        this.newImageData = {};
         return <ImageUploadScreen
             callback={(files) => {
-                this.setState({loading: true});
+                this.setState({ loading: true });
                 this.imageUploadCallback(files).then(uris => {
-                    this.imageURIs = uris;
-                    this.setState({loading: false});
-                    history.push("/1/adjust");
+                    for (let { file, i } of uris.map((file, i) => { return { file, i } }))
+                        this.props.updateOriginalImage(i + 1, file);
+                    this.setState({ loading: false });
+                    history.push('/1/adjust');
+                    this.setActivePage(1, history, 'adjust');
                 });
             }} />;
     }
@@ -77,22 +90,20 @@ export default class AppLayout extends Component {
 
         return <ImageAdjustmentScreen
             key={page}
-            imageURI={this.imageURIs[page - 1]}
-            onPageChange={page => history.push(`/${page}/adjust`)}
+            imageURI={this.props.data[page].original}
+            onPageChange={page => this.setActivePage(page, history, 'adjust')}
             currentPage={page}
             totalPages={this.totalPages}
             onSubmit={this.onPageAdjustmentSubmit.bind(this, page, history)}
             onCancel={() => {
-                if (page === 1) {
-                    history.push("/");
-                } else {
-                    history.push(`/${page - 1}/recognition`);
-                }
+                if (this.props.data[page].adjusted) this.setActivePage(page, history, 'segmentation');
+                else this.setActivePage(page, history, '');
             }} />;
     }
 
     renderSegmentationScreen({ history, match }) {
         const page = this.currentPage(match);
+        const cfg = (this.props.data[page] || {}).configValues || {};
 
         if (this.shouldStop(history, match)) {
             return null;
@@ -100,35 +111,36 @@ export default class AppLayout extends Component {
 
         return <Async
             promiseFn={this.props.segmentationCallback}
+            page={page}
             imageURI={this.getAdjustedPage(page)}
-            contrastFactor={this.state.contrastFactor || 1.5}
-            applyDilation={this.state.applyDilation || false}
-            applyNoiseReduction={this.state.applyNoiseReduction || false}
-            segmentationFactor={this.state.segmentationFactor || 0.5}
-            separationFactor={this.state.separationFactor || 3}
+            contrastFactor={cfg.contrastFactor || 1.5}
+            applyDilation={cfg.applyDilation || false}
+            applyNoiseReduction={cfg.applyNoiseReduction || false}
+            segmentationFactor={cfg.segmentationFactor || 0.5}
+            separationFactor={cfg.separationFactor || 3}
             watch={JSON.stringify([
-                page,
-                this.state.contrastFactor,
-                this.state.applyDilation,
-                this.state.applyNoiseReduction,
-                this.state.segmentationFactor,
-                this.state.separationFactor
+                page, cfg.contrastFactor, cfg.applyDilation, cfg.applyNoiseReduction, cfg.segmentationFactor, cfg.separationFactor
             ])}>
             <Async.Loading><LoadingOverlay /></Async.Loading>
             <Async.Resolved persist>
                 {data => <SegmentationScreen
                     imageURI={data.payload}
-                    onChangePage={page => history.push(`/${page}/segmentation`)}
+                    onChangePage={page => {
+                        if (this.props.data[page].adjusted) this.setActivePage(page, history, 'segmentation')
+                        else this.setActivePage(page, history, 'adjust')
+                    }}
                     currentPage={page}
                     totalPages={this.totalPages}
-                    onChangeContrastFactor={contrastFactor => this.setState({ contrastFactor })}
-                    onChangeApplyDilation={applyDilation => this.setState({ applyDilation })}
-                    onChangeApplyNoiseReduction={applyNoiseReduction => this.setState({ applyNoiseReduction })}
-                    onChangeSegmentationFactor={segmentationFactor => this.setState({ segmentationFactor })}
-                    onChangeSeparationFactor={separationFactor => this.setState({ separationFactor })}
+                    onChangeContrastFactor={value => this.props.updateConfigValue(page, 'contrastFactor', value)}
+                    onChangeApplyDilation={value => this.props.updateConfigValue(page, 'applyDilation', value)}
+                    onChangeApplyNoiseReduction={value => this.props.updateConfigValue(page, 'applyNoiseReduction', value)}
+                    onChangeSegmentationFactor={value => this.props.updateConfigValue(page, 'segmentationFactor', value)}
+                    onChangeSeparationFactor={value => this.props.updateConfigValue(page, 'separationFactor', value)}
                     boxes={data.coords}
-                    handlePrimary={() => history.push(`/${page}/recognition`)}
-                    handleAuxiliary={() => history.push(`/${page}/adjust`)} />}
+                    handlePrimary={() => this.setActivePage(page, history, 'recognition')}
+                    handleAuxiliary={() => this.setActivePage(page, history, 'adjust')} 
+                    defaultValues={this.props.data[page].configValues || {}}
+                    />}
             </Async.Resolved>
             <Async.Rejected>
                 {err => {
@@ -169,6 +181,7 @@ export default class AppLayout extends Component {
     }
 
     render() {
+
         return <Router>
             <React.Fragment>
                 <Route exact path="/" render={this.renderImageUploadScreen.bind(this)} />
@@ -187,5 +200,10 @@ AppLayout.propTypes = {
     loading: PropTypes.bool,
     imageUploadCallback: PropTypes.func,
     segmentationCallback: PropTypes.func.isRequired,
-    recognitionCallback: PropTypes.func.isRequired
+    recognitionCallback: PropTypes.func.isRequired,
+    updateOriginalImage: PropTypes.func.isRequired,
+    updateAdjustedImage: PropTypes.func.isRequired,
+    updateConfigValue: PropTypes.func.isRequired,
+    updateRecognizedText: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired
 };
