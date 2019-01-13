@@ -91,7 +91,10 @@ export default class AppLayout extends Component {
         return <ImageAdjustmentScreen
             key={page}
             imageURI={this.props.data[page].original}
-            onPageChange={page => this.setActivePage(page, history, 'adjust')}
+            onPageChange={page => {
+                if (this.props.data[page].processed) this.setActivePage(page, history, 'segmentation');
+                else this.setActivePage(page, history, 'adjust');
+            }}
             currentPage={page}
             totalPages={this.totalPages}
             onSubmit={this.onPageAdjustmentSubmit.bind(this, page, history)}
@@ -100,10 +103,11 @@ export default class AppLayout extends Component {
                 else this.setActivePage(page, history, '');
             }} />;
     }
+    
 
     renderSegmentationScreen({ history, match }) {
         const page = this.currentPage(match);
-        const cfg = (this.props.data[page] || {}).configValues || {};
+        const cfg = this.state;
 
         if (this.shouldStop(history, match)) {
             return null;
@@ -126,16 +130,16 @@ export default class AppLayout extends Component {
                 {data => <SegmentationScreen
                     imageURI={data.payload}
                     onChangePage={page => {
-                        if (this.props.data[page].adjusted) this.setActivePage(page, history, 'segmentation')
+                        if (this.props.data[page].processed) this.setActivePage(page, history, 'segmentation')
                         else this.setActivePage(page, history, 'adjust')
                     }}
                     currentPage={page}
                     totalPages={this.totalPages}
-                    onChangeContrastFactor={value => this.props.updateConfigValue(page, 'contrastFactor', value)}
-                    onChangeApplyDilation={value => this.props.updateConfigValue(page, 'applyDilation', value)}
-                    onChangeApplyNoiseReduction={value => this.props.updateConfigValue(page, 'applyNoiseReduction', value)}
-                    onChangeSegmentationFactor={value => this.props.updateConfigValue(page, 'segmentationFactor', value)}
-                    onChangeSeparationFactor={value => this.props.updateConfigValue(page, 'separationFactor', value)}
+                    onChangeContrastFactor={contrastFactor => this.setState({ contrastFactor })}
+                    onChangeApplyDilation={applyDilation => this.setState({ applyDilation })}
+                    onChangeApplyNoiseReduction={applyNoiseReduction => this.setState({ applyNoiseReduction })}
+                    onChangeSegmentationFactor={segmentationFactor => this.setState({ segmentationFactor })}
+                    onChangeSeparationFactor={separationFactor => this.setState({ separationFactor })}
                     boxes={data.coords}
                     handlePrimary={() => this.setActivePage(page, history, 'recognition')}
                     handleAuxiliary={() => this.setActivePage(page, history, 'adjust')} 

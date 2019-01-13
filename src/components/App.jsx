@@ -32,42 +32,56 @@ class App extends Component {
   updateOriginalImage(page, originalImage) {
     let oldData = this.state.data;
     if (!oldData[page]) oldData[page] = {};
-    oldData[page].original = originalImage;
-    this.setState({ data: oldData });
-    console.log('updated original', this.state)
+    if (oldData[page].original !== originalImage) {
+      oldData[page].original = originalImage;
+      oldData[page].shouldRequest = true;
+      this.setState({ data: oldData });
+      console.log('updated original', this.state)
+    }
   }
 
   updateAdjustedImage(page, adjustedImage) {
     let oldData = this.state.data;
     if (!oldData[page]) oldData[page] = {};
-    oldData[page].adjusted = adjustedImage;
-    this.setState({ data: oldData });
-    console.log('updated adjusted', this.state);
+    if (oldData[page].adjusted !== adjustedImage) {
+      oldData[page].adjusted = adjustedImage;
+      oldData[page].shouldRequest = true;
+      this.setState({ data: oldData });
+      console.log('updated adjusted', this.state);
+    }
   }
 
   updateProcessedImage(page, processedImage) {
     let oldData = this.state.data;
     if (!oldData[page]) oldData[page] = {};
-    oldData[page].processed = processedImage;
-    this.setState({ data: oldData });
-    console.log('updated processed', this.state);
+    if (oldData[page].processed !== processedImage) {
+      oldData[page].processed = processedImage;
+      this.setState({ data: oldData });
+      console.log('updated processed', this.state);
+    }
   }
 
   updateCoords(page, coords) {
     let oldData = this.state.data;
     if (!oldData[page]) oldData[page] = {};
-    oldData[page].coords = coords;
-    this.setState({ data: oldData })
-    console.log('updated coords', this.state);
+    if (!oldData[page].coords) oldData[page].coords = [];
+    if (oldData[page].coords.length !== coords.length) {
+      oldData[page].coords = coords;
+      this.setState({ data: oldData })
+      console.log('updated coords', this.state);
+    }
   }
 
   updateConfigValue(page, property, value) {
     let oldData = this.state.data;
     if (!oldData[page]) oldData[page] = {};
     if (!oldData[page].configValues) oldData[page].configValues = {};
-    oldData[page].configValues[property] = value;
-    this.setState({ data: oldData });
-    console.log('updated config val', this.state);
+    if (oldData[page].configValues[property] !== value) {
+      oldData[page].configValues[property] = value;
+      oldData[page].shouldRequest = true;
+      this.setState({ data: oldData });
+      console.log('updated config val', property, this.state);
+    }
   }
 
   updateRecognizedText(page, text) {
@@ -99,16 +113,45 @@ class App extends Component {
         name: "doc.pdf",
         payload: docURI.split(',')[1]
       }).then(response => {
-          const data = JSON.parse(response.data);
-          console.log(data.payloads);
-          this.setState({ loading: false })
-          return Promise.resolve(data.payloads.map(pload => 'data:image/png;base64,' + pload));
-        })
+        const data = JSON.parse(response.data);
+        console.log(data.payloads);
+        this.setState({ loading: false })
+        return Promise.resolve(data.payloads.map(pload => 'data:image/png;base64,' + pload));
+      })
     })
+  }
+
+  shouldProcessRequest(page, contrastFactor, applyDilation, applyNoiseReduction, segmentationFactor, separationFactor) {
+    this.updateConfigValue(page, 'contrastFactor', contrastFactor);
+    this.updateConfigValue(page, 'segmentationFactor', segmentationFactor);
+    this.updateConfigValue(page, 'separationFactor', separationFactor);
+    this.updateConfigValue(page, 'applyDilation', applyDilation);
+    this.updateConfigValue(page, 'applyNoiseReduction', applyNoiseReduction);
+    console.log(this.state.data, page);
+    if (this.state.data[page].shouldRequest) {
+      let oldData = this.state.data;
+      oldData[page].shouldRequest = false;
+      this.setState({ data: oldData });
+      console.log('do request');
+      return true;
+    }
+    console.log('dont request');
+    return false;
   }
 
   segmentationCallback({ page, imageURI, contrastFactor, applyDilation, applyNoiseReduction, segmentationFactor, separationFactor }) {
     //return Promise.resolve([[0.1, 0.1, segmentationThreshold / 100, (segmentationDaw ? 0.5 : 0.8)]]);
+
+    if (!this.shouldProcessRequest(page, contrastFactor, applyDilation, applyNoiseReduction, segmentationFactor, separationFactor)) {
+      return this.getImageDimensions(imageURI).then((dimens) => {
+        [w, h] = dimens;
+
+        return {
+          payload: 'data:image/png;base64,' + this.state.data[page].processed,
+          coords: (this.state.data[page].coords || []).map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h])
+        }
+      })
+    }
 
     const req = axios.post("http://localhost:5000/addImage", {
       name: "image.jpg",
@@ -129,6 +172,8 @@ class App extends Component {
     }).then(res => {
       const data = JSON.parse(res.data);
       data.payload = data.payload.substr(1).split('\'').join(''); // b'<<base64>>' => <<base64>>
+      this.updateProcessedImage(page, data.payload);
+      this.updateCoords(page, data.coords);
       // console.log('payload after:', data.payload);
       // console.log(data.coords);
       return {
