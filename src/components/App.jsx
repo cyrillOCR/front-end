@@ -6,6 +6,9 @@ import axios from 'axios';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.imageUploadCallbackBound = this.imageUploadCallback.bind(this);
+    this.segmentationCallbackBound = this.segmentationCallback.bind(this);
+    this.recognitionCallbackBound = this.recognitionCallback.bind(this);
     this.state = {
       data: {},
       loading: false
@@ -143,9 +146,9 @@ class App extends Component {
     return (
       <div className="App">
         <AppLayout
-          segmentationCallback={this.segmentationCallback.bind(this)}
-          recognitionCallback={this.recognitionCallback.bind(this)}
-          imageUploadCallback={this.imageUploadCallback.bind(this)}
+          imageUploadCallback={this.imageUploadCallbackBound}
+          segmentationCallback={this.segmentationCallbackBound}
+          recognitionCallback={this.recognitionCallbackBound}
           updateOriginalImage={this.updateOriginalImage.bind(this)}
           updateAdjustedImage={this.updateAdjustedImage.bind(this)}
           updateRecognizedText={this.updateRecognizedText.bind(this)}
