@@ -7,8 +7,8 @@ import SegmentationScreen from './SegmentationScreen';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import TextRecognitionScreen from './TextRecognitionScreen';
 import Async from 'react-async';
+import LoadingOverlay from './LoadingOverlay';
 
-const LoadingOverlay = () => <div className="loading-overlay">Loading...</div>;
 
 export default class AppLayout extends Component {
     constructor(props) {
@@ -20,8 +20,19 @@ export default class AppLayout extends Component {
             prevScreen: '',
             currentScreen: ''
         };
+
+        this.loadingMessages = [
+            'Searching for courses in chirilic',
+            'Learning to read ugly writing',
+            'Hold tight now',
+            'A poor student is trying to figure it out',
+            'Dusting off the paper',
+            'Polishing the letters',
+            'We are all in this togheter',
+        ];
     }
 
+    
     onPageAdjustmentSubmit(currentPage, history, newData) {
         this.props.updateAdjustedImage(currentPage, newData);
         this.setActivePage(currentPage, history, 'segmentation')
@@ -148,7 +159,7 @@ export default class AppLayout extends Component {
             watch={JSON.stringify([
                 page, cfg.contrastFactor, cfg.applyDilation, cfg.applyNoiseReduction, cfg.segmentationFactor, cfg.separationFactor
             ])}>
-            <Async.Loading><LoadingOverlay /></Async.Loading>
+            <Async.Loading><LoadingOverlay loadingStatements={this.loadingMessages} /></Async.Loading>
             <Async.Resolved>
                 {data => <SegmentationScreen
                     imageURI={data.payload}
@@ -191,7 +202,7 @@ export default class AppLayout extends Component {
             page={page}
             imageURI={processedPage}
             watch={JSON.stringify([page, processedPage])}>
-            <Async.Loading><LoadingOverlay /></Async.Loading>
+            <Async.Loading><LoadingOverlay loadingStatements={this.loadingMessages}/></Async.Loading>
             <Async.Resolved>
                 {data => <TextRecognitionScreen
                     imageURI={data.processedImage}
@@ -206,7 +217,7 @@ export default class AppLayout extends Component {
                     textAreaContent={data.text}
                     handlePrimary={() => this.setActivePage(page, history, 'segmentation')}
                     handleSecondary={() => this.setActivePage(page, history, 'adjust')}
-                    handleAuxiliary={() => this.setActivePage(page, history, '/')} />}
+                    handleAuxiliary={() => this.setActivePage(page, history, '')} />}
             </Async.Resolved>
         </Async>;
     }
@@ -221,7 +232,7 @@ export default class AppLayout extends Component {
                 <Route path="/:page/recognition" render={this.renderRecognitionScreen.bind(this)} />
 
                 {(this.props.loading || this.state.loading) &&
-                    <LoadingOverlay />}
+                    <LoadingOverlay loadingStatements={this.loadingMessages}/>}
             </React.Fragment>
         </Router>;
     }
