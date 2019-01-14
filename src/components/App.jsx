@@ -43,12 +43,12 @@ class App extends Component {
   updateAdjustedImage(page, adjustedImage) {
     let oldData = this.state.data;
     if (!oldData[page]) oldData[page] = {};
-    if (oldData[page].adjusted !== adjustedImage) {
-      oldData[page].adjusted = adjustedImage;
-      oldData[page].shouldRequest = true;
-      this.setState({ data: oldData });
-      console.log('updated adjusted', this.state);
-    }
+    oldData[page].adjusted = adjustedImage;
+    oldData[page].processedImage = undefined;
+    oldData[page].coords = undefined;
+    oldData[page].configValues = undefined;
+    this.setState({ data: oldData });
+    console.log('updated adjusted', this.state);
   }
 
   updateProcessedImage(page, processedImage) {
@@ -56,6 +56,7 @@ class App extends Component {
     if (!oldData[page]) oldData[page] = {};
     if (oldData[page].processed !== processedImage) {
       oldData[page].processed = processedImage;
+      oldData[page].featureRequest = true;
       this.setState({ data: oldData });
       console.log('updated processed', this.state);
     }
@@ -67,6 +68,7 @@ class App extends Component {
     if (!oldData[page].coords) oldData[page].coords = [];
     if (oldData[page].coords.length !== coords.length) {
       oldData[page].coords = coords;
+      oldData[page].featureRequest = true;
       this.setState({ data: oldData })
       console.log('updated coords', this.state);
     }
@@ -76,6 +78,7 @@ class App extends Component {
     let oldData = this.state.data;
     if (!oldData[page]) oldData[page] = {};
     if (!oldData[page].configValues) oldData[page].configValues = {};
+    console.log(property, 'was', oldData[page].configValues[property], 'new', value);
     if (oldData[page].configValues[property] !== value) {
       oldData[page].configValues[property] = value;
       oldData[page].shouldRequest = true;
@@ -108,7 +111,7 @@ class App extends Component {
       }
       //post request to addPdf if doc is PDF
       console.log(docURI.split(',')[1]);
-
+      //  return axios.post('http://golar3.go.ro:5000/convertPdf', {
       return axios.post('http://localhost:5000/convertPdf', {
         name: "doc.pdf",
         payload: docURI.split(',')[1]
@@ -127,7 +130,6 @@ class App extends Component {
     this.updateConfigValue(page, 'separationFactor', separationFactor);
     this.updateConfigValue(page, 'applyDilation', applyDilation);
     this.updateConfigValue(page, 'applyNoiseReduction', applyNoiseReduction);
-    console.log(this.state.data, page);
     if (this.state.data[page].shouldRequest) {
       let oldData = this.state.data;
       oldData[page].shouldRequest = false;
@@ -142,8 +144,9 @@ class App extends Component {
   segmentationCallback({ page, imageURI, contrastFactor, applyDilation, applyNoiseReduction, segmentationFactor, separationFactor }) {
     //return Promise.resolve([[0.1, 0.1, segmentationThreshold / 100, (segmentationDaw ? 0.5 : 0.8)]]);
 
+    console.log('primesc', page, contrastFactor, applyDilation, applyNoiseReduction, segmentationFactor, separationFactor);
     if (!this.shouldProcessRequest(page, contrastFactor, applyDilation, applyNoiseReduction, segmentationFactor, separationFactor)) {
-      return this.getImageDimensions(imageURI).then((dimens) => {
+      return this.getImageDimensions(this.state.data[page].adjusted).then((dimens) => {
         [w, h] = dimens;
 
         return {
@@ -152,7 +155,7 @@ class App extends Component {
         }
       })
     }
-
+    //  const req = axios.post("http://golar3.go.ro:5000/addImage", {
     const req = axios.post("http://localhost:5000/addImage", {
       name: "image.jpg",
       payload: imageURI.substr(imageURI.indexOf(",") + 1),
@@ -183,8 +186,43 @@ class App extends Component {
     });
   }
 
-  recognitionCallback(args) {
-    return Promise.resolve({ boxes: [], text: args.imageURI })
+  shouldFeatureRequest(page) {
+    if (this.state.data[page].featureRequest) {
+      let oldData = this.state.data;
+      oldData[page].featureRequest = false;
+      this.setState({ data: oldData });
+      return true;
+    }
+    return false;
+  }
+
+  recognitionCallback({ page , imageURI}) {
+    let processedImage = this.state.data[page].processed;
+    const coords = this.state.data[page].coords;
+
+    if (!this.shouldFeatureRequest(page)) {
+      let processedImage = 'data:image/png;base64,' + imageURI;
+      let coords = this.state.data[page].coords;
+      let text = this.state.data[page].text;
+      return this.getImageDimensions(processedImage).then(dimens => {
+        const [w, h] = dimens;
+        return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: processedImage, text: text.join('') }
+      })
+    }
+    // return Promise.resolve({ boxes: [], text: args.imageURI })
+    return axios.post('http://golar3.go.ro:5050/feature', {
+      coords: coords,
+      base64: processedImage
+    }).then(response => {
+      let data = response.data;
+      this.setState({ loading: false })
+      this.updateRecognizedText(page, data);
+      processedImage = 'data:image/png;base64,' + processedImage;
+      return this.getImageDimensions(processedImage).then(dimens => {
+        const [w, h] = dimens;
+        return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: processedImage, text: data.join('') };
+      })
+    });
   }
 
   render() {
