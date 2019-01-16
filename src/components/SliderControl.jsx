@@ -16,6 +16,8 @@ export default class SliderControl extends Component {
         this.state = {
             value: defaultValue
         };
+
+        this.props.onChange(this.state.value);
     }
 
     handleReset() {

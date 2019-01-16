@@ -20,7 +20,8 @@ export default class ImageUploader extends Component {
     render() {
         return (
             <div className="dropzone">
-                <Dropzone onDrop={this.onDrop.bind(this)}
+                <Dropzone  accept="image/png, image/jpeg, application/pdf" 
+                    onDrop={this.onDrop.bind(this)}
                     onFileDialogCancel={this.onCancel.bind(this)}  
                     style={dropzoneArea} activeStyle={dropzoneActive}>
                     <div className="upload-placeholder">
@@ -38,5 +39,5 @@ export default class ImageUploader extends Component {
 
 
 ImageUploader.propTypes = {
-    callblack: PropTypes.func.isRequired
+    callback: PropTypes.func.isRequired
 }
