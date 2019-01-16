@@ -44,5 +44,5 @@ export default class ImageUploadScreen extends Component {
 }
 
 ImageUploadScreen.propTypes = {
-    callblack: PropTypes.func.isRequired
+    callback: PropTypes.func.isRequired
 }

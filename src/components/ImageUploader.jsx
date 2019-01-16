@@ -39,5 +39,5 @@ export default class ImageUploader extends Component {
 
 
 ImageUploader.propTypes = {
-    callblack: PropTypes.func.isRequired
+    callback: PropTypes.func.isRequired
 }

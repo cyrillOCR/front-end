@@ -12,6 +12,10 @@ class SegmentationScreen extends Component {
     constructor(props) {
         super(props);
 
+        this.contrastFactorSlider = React.createRef();
+        this.segmentationFactorSlider = React.createRef();
+        this.separationFactorSlider = React.createRef();
+
         this.propsForSidekick = {
             title: 'Finding letters...'
         }
@@ -19,7 +23,7 @@ class SegmentationScreen extends Component {
         this.propsForContrastFactorSlider = {
             maxValue: 3,
             minValue: 1,
-            defaultValue: 1.5,
+            defaultValue: parseFloat(this.props.defaultValues.contrastFactor) || 1.5,
             step: 0.01,
             iconName: 'fas fa-adjust',
             label: 'Contrast'
@@ -28,16 +32,16 @@ class SegmentationScreen extends Component {
         this.propsForSegmentationFactorSlider = {
             maxValue: 0.7,
             minValue: 0.3,
-            defaultValue: 0.5,
+            defaultValue: parseFloat(this.props.defaultValues.segmentationFactor) || 0.5,
             step: 0.01,
             iconName: 'fas fa-adjust',
-            label: 'Segmentaion'
+            label: 'Segmentation'
         }
 
         this.propsForSeparationFactorSlider = {
             maxValue: 8,
             minValue: 2,
-            defaultValue: 3,
+            defaultValue: parseInt(this.props.defaultValues.separationFactor) || 3,
             step: 1,
             unit: 'px',
             iconName: 'fas fa-adjust',
@@ -45,19 +49,15 @@ class SegmentationScreen extends Component {
         }
 
         this.propsForApplyDilationCheckbox = {
-            defaultValue: true,
+            defaultValue: this.props.defaultValues.applyDilation || false,
             label: 'Dilation',
-            toolTipText: 
-                `If set, it dilates and erosions the characters, making them more clear,
-                but has very long execution time.`
+            tooltipText: 'Better character spotting, increases the execution time.'
         }
 
         this.propsForApplyNoiseReductionCheckbox = {
-            defaultValue: false,
+            defaultValue: this.props.defaultValues.applyNoiseReduction || false,
             label: 'Noise Reduction',
-            toolTipText: 
-                `If set, it totally removes the noise of the image, making it 
-                sharp and clear but increases the execution time.`
+            tooltipText: 'Image noise reduction, increases the execution time.'
         }
 
         this.propsForButtonsControl = {
@@ -67,105 +67,74 @@ class SegmentationScreen extends Component {
             iconLabel: 'fas fa-search'
         }
     }
-    
+
+    handleReset() {
+        if (this.contrastFactorSlider.current) this.contrastFactorSlider.current.handleReset();
+        if (this.segmentationFactorSlider.current) this.segmentationFactorSlider.current.handleReset();
+        if (this.separationFactorSlider.current) this.separationFactorSlider.current.handleReset();
+    }
+
     render() {
-        const { 
-            imageURI,
-            boxes,
-            currentPage,
-            totalPages,
-            handlePrimary, 
-            handleSecondary, 
-            handleAuxiliary,
-            onChangePage,
-            onChangeApplyDilation,
-            onChangeApplyNoiseReduction,
-            onChangeContrastFactor,
-            onChangeSegmentationFactor,
-            onChangeSeparationFactor
-        } = this.props; 
         var imagePreview = null;
-        
-        if (imageURI) {
-            imagePreview = <ImagePreview imageURI={imageURI} boxes={boxes}/>
+
+        if (this.props.imageURI) {
+            imagePreview = <ImagePreview imageURI={this.props.imageURI} boxes={this.props.boxes} />
         }
- 
-        return (    
+
+        return (
             <div className="segmentation-screen-container">
                 <div className="image-preview-container">
                     {imagePreview}
                 </div>
                 <div className="sidekick-container-parent">
-                    <Sidekick 
-                        title={this.propsForSidekick.title} 
-                        onChange={onChangePage} 
-                        currentPage={currentPage} 
-                        totalPages={totalPages}>
+                    <Sidekick
+                        title={this.propsForSidekick.title}
+                        onChange={this.props.onChangePage}
+                        currentPage={this.props.currentPage}
+                        totalPages={this.props.totalPages}>
                         <div className="slider-control">
                             <SliderControl
-                                maxValue={this.propsForContrastFactorSlider.maxValue} 
-                                minValue={this.propsForContrastFactorSlider.minValue}
-                                defaultValue={this.propsForContrastFactorSlider.defaultValue} 
-                                iconName={this.propsForContrastFactorSlider.iconName} 
-                                label={this.propsForContrastFactorSlider.label} 
-                                unit={this.propsForContrastFactorSlider.unit}
-                                step={this.propsForContrastFactorSlider.step} 
-                                onChange={onChangeContrastFactor} 
-                                update='final'/>
+                                {...this.propsForContrastFactorSlider}
+                                onChange={this.props.onChangeContrastFactor}
+                                ref={this.contrastFactorSlider}
+                                update='final' />
                         </div>
 
                         <div className="slider-control">
                             <SliderControl
-                                maxValue={this.propsForSegmentationFactorSlider.maxValue} 
-                                minValue={this.propsForSegmentationFactorSlider.minValue}
-                                defaultValue={this.propsForSegmentationFactorSlider.defaultValue} 
-                                iconName={this.propsForSegmentationFactorSlider.iconName} 
-                                label={this.propsForSegmentationFactorSlider.label} 
-                                unit={this.propsForSegmentationFactorSlider.unit}
-                                step={this.propsForSegmentationFactorSlider.step} 
-                                onChange={onChangeSegmentationFactor} 
-                                update='final'/>
+                                {...this.propsForSegmentationFactorSlider}
+                                onChange={this.props.onChangeSegmentationFactor}
+                                ref={this.segmentationFactorSlider}
+                                update='final' />
                         </div>
 
                         <div className="slider-control">
                             <SliderControl
-                                maxValue={this.propsForSeparationFactorSlider.maxValue} 
-                                minValue={this.propsForSeparationFactorSlider.minValue}
-                                defaultValue={this.propsForSeparationFactorSlider.defaultValue} 
-                                iconName={this.propsForSeparationFactorSlider.iconName} 
-                                label={this.propsForSeparationFactorSlider.label} 
-                                unit={this.propsForSeparationFactorSlider.unit}
-                                step={this.propsForSeparationFactorSlider.step} 
-                                onChange={onChangeSeparationFactor} 
-                                update='final'/>
+                                {...this.propsForSeparationFactorSlider}
+                                onChange={this.props.onChangeSeparationFactor}
+                                ref={this.separationFactorSlider}
+                                update='final' />
                         </div>
 
 
                         <div className="checkbox-control">
                             <CheckboxControl
-                                defaultValue={this.propsForApplyDilationCheckbox.defaultValue}
-                                label={this.propsForApplyDilationCheckbox.label}
-                                tooltipText={this.propsForApplyDilationCheckbox.toolTipText}
-                                onChange={onChangeApplyDilation} />
+                                {...this.propsForApplyDilationCheckbox}
+                                onChange={this.props.onChangeApplyDilation} />
                         </div>
 
                         <div className="checkbox-control">
                             <CheckboxControl
-                                defaultValue={this.propsForApplyNoiseReductionCheckbox.defaultValue}
-                                label={this.propsForApplyNoiseReductionCheckbox.label}
-                                tooltipText={this.propsForApplyNoiseReductionCheckbox.toolTipText}
-                                onChange={onChangeApplyNoiseReduction} />
+                                {...this.propsForApplyNoiseReductionCheckbox}
+                                onChange={this.props.onChangeApplyNoiseReduction} />
                         </div>
-                        
+
                         <div className="buttons-control">
                             <ButtonsControl
-                                handlePrimary={handlePrimary}
-                                handleSecondary={handleSecondary}
-                                handleAuxiliary={handleAuxiliary}
-                                primaryLabel={this.propsForButtonsControl.primaryLabel}
-                                secondaryLabel={this.propsForButtonsControl.secondaryLabel}
-                                auxiliaryLabel={this.propsForButtonsControl.auxiliaryLabel}
-                                iconLabel={this.propsForButtonsControl.iconLabel}/>
+                                handlePrimary={this.props.handlePrimary}
+                                handleSecondary={this.handleReset.bind(this)}
+                                handleAuxiliary={this.props.handleAuxiliary}
+                                {...this.propsForButtonsControl} />
                         </div>
                     </Sidekick>
                 </div>
@@ -179,15 +148,15 @@ SegmentationScreen.propTypes = {
     boxes: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
     currentPage: PropTypes.number.isRequired,
     totalPages: PropTypes.number.isRequired,
-    handlePrimary: PropTypes.func.isRequired, 
-    handleSecondary: PropTypes.func.isRequired, 
+    handlePrimary: PropTypes.func.isRequired,
     handleAuxiliary: PropTypes.func.isRequired,
     onChangePage: PropTypes.func.isRequired,
-    onChangeDilation: PropTypes.func.isRequired,
-    onChangeNoiseReduction: PropTypes.func.isRequired,
+    onChangeApplyDilation: PropTypes.func.isRequired,
+    onChangeApplyNoiseReduction: PropTypes.func.isRequired,
     onChangeContrastFactor: PropTypes.func.isRequired,
     onChangeSegmentationFactor: PropTypes.func.isRequired,
-    onChangeSeparationFactor: PropTypes.func.isRequired
+    onChangeSeparationFactor: PropTypes.func.isRequired,
+    defaultValues: PropTypes.object
 }
 
 export default SegmentationScreen;

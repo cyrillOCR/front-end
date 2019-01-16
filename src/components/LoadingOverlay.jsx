@@ -15,33 +15,37 @@ export default class LoadingOverlay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            indexText: 0
+            indexText: Math.floor(Math.random() * this.props.loadingStatements.length)
         }
     }
+
+    componentDidMount() {
+        this.interval = setInterval(() => {
+            const stmtsLength = this.props.loadingStatements.length;
+            let newIndex = Math.floor(Math.random() * stmtsLength);
+            while (newIndex === this.state.indexText)
+                newIndex = Math.floor(Math.random() * stmtsLength);
+            this.setState({ indexText: newIndex })
+        }, 5000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
     render() {
-        const { loadingStatements }  = this.props;
-
-        setTimeout(()=>{
-            this.setState({indexText: Math.floor(Math.random() * loadingStatements.length) })
-        }, 4000)
-
-        if (!loadingStatements) {
-            return '...';
-        }
-        else {
-            return(
-                <div className="main">
-                    <div className="animation">
-                        <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
-                    </div>
-                    <div className="loading-statements-container">
-                        <div className="text-container">
-                            {loadingStatements[this.state.indexText]}
-                        </div>
+        return (
+            <div className="main">
+                <div className="animation">
+                    <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+                </div>
+                <div className="loading-statements-container">
+                    <div className="text-container">
+                        {this.props.loadingStatements[this.state.indexText]}
                     </div>
                 </div>
-            )        
-        }
+            </div>
+        )
     }
 }
 

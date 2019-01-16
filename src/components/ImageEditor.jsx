@@ -37,12 +37,13 @@ export default class ImageEditor extends Component {
     }
 
     updateBoundings() {
-        this.setState({
-            style: {
-                height: this.mirror.current.clientHeight,
-                width: this.mirror.current.width
-            }
-        })
+        if (this.mirror.current)
+            this.setState({
+                style: {
+                    height: this.mirror.current.clientHeight,
+                    width: this.mirror.current.width
+                }
+            })
         if (this.cropper.current) this.cropper.current.reset()
     }
 
