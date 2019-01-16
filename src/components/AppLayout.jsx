@@ -32,7 +32,7 @@ export default class AppLayout extends Component {
         ];
     }
 
-    
+
     onPageAdjustmentSubmit(currentPage, history, newData) {
         this.props.updateAdjustedImage(currentPage, newData);
         this.setActivePage(currentPage, history, 'segmentation')
@@ -63,15 +63,7 @@ export default class AppLayout extends Component {
             page = 1;
         }
         else history.push(`/${page}/${screen}`);
-        console.log(page, history, screen);
-        let prevPage = this.state.page;
         this.setState({ page, prevScreen: this.state.currentScreen, currentScreen: screen });
-        // if (page !== prevPage) {
-        //     let configValues = (this.props.data[page] || {}).configValues;
-        //     console.log('new config values', configValues);
-        //     this.setState({ configValues })
-
-        // }
     }
 
     get imageUploadCallback() {
@@ -156,11 +148,12 @@ export default class AppLayout extends Component {
             applyNoiseReduction={cfg.applyNoiseReduction || false}
             segmentationFactor={parseFloat(cfg.segmentationFactor) || 0.5}
             separationFactor={parseInt(cfg.separationFactor) || 3}
+            // initialValue={{ payload: this.props.data[page].adjusted, coords: [] }}
             watch={JSON.stringify([
                 page, cfg.contrastFactor, cfg.applyDilation, cfg.applyNoiseReduction, cfg.segmentationFactor, cfg.separationFactor
             ])}>
             <Async.Loading><LoadingOverlay loadingStatements={this.loadingMessages} /></Async.Loading>
-            <Async.Resolved>
+            <Async.Resolved persist>
                 {data => <SegmentationScreen
                     imageURI={data.payload}
                     onChangePage={page => {
@@ -197,12 +190,26 @@ export default class AppLayout extends Component {
             return null;
         }
 
+        const dummyScreen = <TextRecognitionScreen
+            imageURI={this.props.data[page].adjusted}
+            onChangePage={() => {}}
+            currentPage={page}
+            totalPages={this.totalPages}
+            boxes={[]}
+            textAreaContent=""
+            handlePrimary={() => {}}
+            handleSecondary={() => {}}
+            handleAuxiliary={() => {}} />
+
         return <Async
             promiseFn={this.props.recognitionCallback}
             page={page}
             imageURI={processedPage}
             watch={JSON.stringify([page, processedPage])}>
-            <Async.Loading><LoadingOverlay loadingStatements={this.loadingMessages}/></Async.Loading>
+            <Async.Loading>
+                {dummyScreen}
+                <LoadingOverlay loadingStatements={this.loadingMessages} />
+            </Async.Loading>
             <Async.Resolved>
                 {data => <TextRecognitionScreen
                     imageURI={data.processedImage}
@@ -219,6 +226,12 @@ export default class AppLayout extends Component {
                     handleSecondary={() => this.setActivePage(page, history, 'adjust')}
                     handleAuxiliary={() => this.setActivePage(page, history, '')} />}
             </Async.Resolved>
+            <Async.Rejected>
+                {err => {
+                    console.log(err);
+                    return <div>Error. check console.</div>
+                }}
+            </Async.Rejected>
         </Async>;
     }
 
@@ -232,7 +245,7 @@ export default class AppLayout extends Component {
                 <Route path="/:page/recognition" render={this.renderRecognitionScreen.bind(this)} />
 
                 {(this.props.loading || this.state.loading) &&
-                    <LoadingOverlay loadingStatements={this.loadingMessages}/>}
+                    <LoadingOverlay loadingStatements={this.loadingMessages} />}
             </React.Fragment>
         </Router>;
     }
