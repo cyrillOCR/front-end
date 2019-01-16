@@ -9,6 +9,11 @@ import TextArea from "./TextArea";
 export default class TextRecognitionScreen extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            wordIndex: -1
+        };
+
         this.propsForSidekick = {
             title: "Recognize text"
         };
@@ -33,12 +38,22 @@ export default class TextRecognitionScreen extends Component {
             onChangePage
         } = this.props;
 
+        let coordsList = boxes;
+        if (this.state.wordIndex !== -1) {
+            coordsList = coordsList.slice(0, this.state.wordIndex)
+                        .concat([boxes[this.state.wordIndex].concat(10)])
+                        .concat(coordsList.slice(this.state.wordIndex+1))
+        }
         return (
             <div className="container">
                 <div className="content-wrapper">
                     <div className="left-column">
                         {imageURI && (
-                            <ImagePreview imageURI={imageURI} boxes={boxes} />
+                            <ImagePreview
+                                imageURI={imageURI} boxes={coordsList}
+                                onHighlight={(wordIndex) => this.setState({ wordIndex })}
+                                onRemoveHighlight={() => this.setState({ wordIndex: -1 })}
+                            />
                         )}
                     </div>
                     <div className="right-column">
@@ -48,27 +63,19 @@ export default class TextRecognitionScreen extends Component {
                             currentPage={currentPage}
                             totalPages={totalPages}
                         >
-                            <TextArea text={this.props.textAreaContent} />
+                            <TextArea
+                                text={this.props.textAreaContent}
+                                highlighted={this.state.wordIndex}
+                                onHighlight={(wordIndex) => this.setState({ wordIndex })}
+                                onRemoveHighlight={() => this.setState({ wordIndex: -1 })}
+                            />
 
                             <div className="buttons-control">
                                 <ButtonsControl
                                     handlePrimary={handlePrimary}
                                     handleSecondary={handleSecondary}
                                     handleAuxiliary={handleAuxiliary}
-                                    primaryLabel={
-                                        this.propsForButtonsControl.primaryLabel
-                                    }
-                                    secondaryLabel={
-                                        this.propsForButtonsControl
-                                            .secondaryLabel
-                                    }
-                                    auxiliaryLabel={
-                                        this.propsForButtonsControl
-                                            .auxiliaryLabel
-                                    }
-                                    iconLabel={
-                                        this.propsForButtonsControl.iconLabel
-                                    }
+                                    {...this.propsForButtonsControl}
                                 />
                             </div>
                         </Sidekick>
@@ -88,5 +95,5 @@ TextRecognitionScreen.propTypes = {
     handleSecondary: PropTypes.func.isRequired,
     handleAuxiliary: PropTypes.func.isRequired,
     onChangePage: PropTypes.func.isRequired,
-    textAreaContent: PropTypes.string
+    textAreaContent: PropTypes.arrayOf(PropTypes.string).isRequired
 };

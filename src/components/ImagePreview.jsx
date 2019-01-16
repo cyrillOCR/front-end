@@ -60,15 +60,18 @@ export default class ImagePreview extends Component {
                     y={coords[1] * this.state.imageHeight}
                     width={coords[2] * this.state.imageWidth}
                     height={coords[3] * this.state.imageHeight}
+                    onMouseEnter={() => { if (this.props.onHighlight) this.props.onHighlight(index) }}
+                    onMouseLeave={() => { if (this.props.onRemoveHighlight) this.props.onRemoveHighlight() }}
                     style={{
                         fill: "none",
                         stroke: "#2a6f9e",
                         strokeOpacity: 1,
-                        strokeWidth: 2
-                    }}></rect>)
+                        strokeWidth: coords.length === 5 ? coords[4] : 2,
+                        pointerEvents: 'all'
+                    }} />)
             : [];
 
-        return <div ref={this.containerRef} style={{width: "100%", height: "100%"}}>
+        return <div ref={this.containerRef} style={{ width: "100%", height: "100%" }}>
             {this.state.imageLoaded && this.state.width && this.state.height
                 ? <ReactSVGPanZoom ref={this.viewerRef} background="none"
                     width={this.state.width} height={this.state.height}
@@ -80,7 +83,7 @@ export default class ImagePreview extends Component {
                     </svg>
                 </ReactSVGPanZoom>
                 : <img src={this.props.imageURI} onLoad={this.imageLoaded.bind(this)}
-                    alt="Loading..." style={{display: "none"}} />
+                    alt="Loading..." style={{ display: "none" }} />
             }
             <ResizeObserver onResize={this.handleResize.bind(this)}></ResizeObserver>
         </div>;
@@ -89,5 +92,7 @@ export default class ImagePreview extends Component {
 
 ImagePreview.propTypes = {
     imageURI: PropTypes.string.isRequired,
-    boxes: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired
+    boxes: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+    onHighlight: PropTypes.func,
+    onRemoveHighlight: PropTypes.func
 };

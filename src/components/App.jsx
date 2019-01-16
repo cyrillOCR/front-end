@@ -70,6 +70,16 @@ class App extends Component {
     }
   }
 
+  updateWordsCoords(page, coords) {
+    let oldData = this.state.data;
+    if (!oldData[page]) oldData[page] = {};
+    if (!oldData[page].wordsCoords) oldData[page].wordsCoords = [];
+    if (oldData[page].wordsCoords.length !== coords.length) {
+      oldData[page].wordsCoords = coords;
+      this.setState({ data: oldData })
+    }
+  }
+
   updateConfigValue(page, property, value) {
     let oldData = this.state.data;
     if (!oldData[page]) oldData[page] = {};
@@ -112,6 +122,9 @@ class App extends Component {
         const data = JSON.parse(response.data);
         this.setState({ loading: false })
         return Promise.resolve(data.payloads.map(pload => 'data:image/png;base64,' + pload));
+      }).catch(err => {
+        this.setState({loading: false});
+        return Promise.resolve([]);
       })
     })
   }
@@ -185,12 +198,12 @@ class App extends Component {
     let processedImage = this.state.data[page].processed;
     let coords = this.state.data[page].coords;
     if (!this.shouldFeatureRequest(page)) {
-      let processedImage = 'data:image/png;base64,' + imageURI;
-      let coords = this.state.data[page].coords;
+      let adjustedImage = this.state.data[page].adjusted;
+      let coords = this.state.data[page].wordsCoords;
       let text = this.state.data[page].text;
-      return this.getImageDimensions(processedImage).then(dimens => {
+      return this.getImageDimensions(adjustedImage).then(dimens => {
         const [w, h] = dimens;
-        return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: processedImage, text: text.join('') }
+        return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: adjustedImage, text }
       })
     }
     // return Promise.resolve({ boxes: [], text: args.imageURI })
@@ -207,11 +220,12 @@ class App extends Component {
         words.push(value[1]);
       }
       this.setState({ loading: false })
-      this.updateRecognizedText(page, data);
-      processedImage = 'data:image/png;base64,' + processedImage;
+      this.updateRecognizedText(page, words);
+      this.updateWordsCoords(page, coords);
+      processedImage = this.state.data[page].adjusted;
       return this.getImageDimensions(processedImage).then(dimens => {
         const [w, h] = dimens;
-        return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: processedImage, text: words.join(' ') };
+        return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: processedImage, text: words};
       })
     });
   }
