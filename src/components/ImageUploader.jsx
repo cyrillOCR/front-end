@@ -6,9 +6,7 @@ import "../styles/ImageUploader.css";
 import { dropzoneActive, dropzoneArea } from '../styles/dropzoneStyle';
 
 export default class ImageUploader extends Component {
-    constructor(props) {
-        super(props)
-      }
+    
 
       onDrop(files) {
         this.props.callback(files);

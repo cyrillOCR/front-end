@@ -6,9 +6,6 @@ import ImageUploader from './ImageUploader';
 import logo from '../assets/logo.svg';
 
 export default class ImageUploadScreen extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     render() {
         return ( 
@@ -18,15 +15,20 @@ export default class ImageUploadScreen extends Component {
                         <img src={logo} className="App-logo" alt="logo" />
                     </header>
                     <article className="about-app">
-                        <h2>Lorem ipsum dolor sit AMET dolor</h2>
+                        <h2>Cyrillic Character Recognition</h2>
                         <div className="how-to-container">
-                            <h3>How to use:</h3>
+                            <h3>How it works:</h3>
                             <span>
-                                You can get started just by uploading 
-                                a picture over there. Once the picture is
-                                uploaded, adjust it by cropping and rotating,
-                                and then submit it to our powerful OCR so it 
-                                can get the text from your dusty old documents.
+                               <ul>
+                                   <li>Upload your document containing cyrillic characters</li>
+                                   <li>Adjust the page (scale, crop, rotate)</li>
+                                   <li>Make sure the letters are accurately highlighted</li>
+                                   <li>Extract the text</li>
+                               </ul>
+                            </span>
+                            <h3>Supported formats:</h3>
+                            <span>
+                                Upload <strong>PDF</strong>, <strong>JPG</strong> or <strong>PNG</strong> files.
                             </span>
                         </div>
                     </article>

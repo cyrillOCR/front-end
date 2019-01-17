@@ -41,7 +41,7 @@ class SegmentationScreen extends Component {
         this.propsForSeparationFactorSlider = {
             maxValue: 8,
             minValue: 2,
-            defaultValue: parseInt(this.props.defaultValues.separationFactor) || 3,
+            defaultValue: parseInt(this.props.defaultValues.separationFactor, 10) || 3,
             step: 1,
             unit: 'px',
             iconName: 'fas fa-adjust',
@@ -82,61 +82,60 @@ class SegmentationScreen extends Component {
         }
 
         return (
-            <div className="segmentation-screen-container">
-                <div className="image-preview-container">
-                    {imagePreview}
-                </div>
-                <div className="sidekick-container-parent">
-                    <Sidekick
-                        title={this.propsForSidekick.title}
-                        onChange={this.props.onChangePage}
-                        currentPage={this.props.currentPage}
-                        totalPages={this.props.totalPages}>
-                        <div className="slider-control">
-                            <SliderControl
-                                {...this.propsForContrastFactorSlider}
-                                onChange={this.props.onChangeContrastFactor}
-                                ref={this.contrastFactorSlider}
-                                update='final' />
+            <div className="s-container">
+                <div className="s-content-wrapper">
+                    <div className="s-left-column">
+                        <div className="s-image-preview">
+                            {imagePreview}
                         </div>
+                    </div>
+                    <div className="s-right-column">
+                        <Sidekick
+                            title={this.propsForSidekick.title}
+                            onChange={this.props.onChangePage}
+                            currentPage={this.props.currentPage}
+                            totalPages={this.props.totalPages}>
+                            <div className="s-slider-control-container">
+                                <SliderControl
+                                    {...this.propsForContrastFactorSlider}
+                                    onChange={this.props.onChangeContrastFactor}
+                                    ref={this.contrastFactorSlider}
+                                    update='final' />
+                            </div>
 
-                        <div className="slider-control">
-                            <SliderControl
-                                {...this.propsForSegmentationFactorSlider}
-                                onChange={this.props.onChangeSegmentationFactor}
-                                ref={this.segmentationFactorSlider}
-                                update='final' />
-                        </div>
+                            <div className="s-slider-control-container">
+                                <SliderControl
+                                    {...this.propsForSegmentationFactorSlider}
+                                    onChange={this.props.onChangeSegmentationFactor}
+                                    ref={this.segmentationFactorSlider}
+                                    update='final' />
 
-                        <div className="slider-control">
-                            <SliderControl
-                                {...this.propsForSeparationFactorSlider}
-                                onChange={this.props.onChangeSeparationFactor}
-                                ref={this.separationFactorSlider}
-                                update='final' />
-                        </div>
+                                <SliderControl
+                                    {...this.propsForSeparationFactorSlider}
+                                    onChange={this.props.onChangeSeparationFactor}
+                                    ref={this.separationFactorSlider}
+                                    update='final' />
+                            </div>
 
 
-                        <div className="checkbox-control">
-                            <CheckboxControl
-                                {...this.propsForApplyDilationCheckbox}
-                                onChange={this.props.onChangeApplyDilation} />
-                        </div>
+                            <div className="s-checkbox-control-container">
+                                <CheckboxControl
+                                    {...this.propsForApplyDilationCheckbox}
+                                    onChange={this.props.onChangeApplyDilation} />
+                            </div>
 
-                        <div className="checkbox-control">
-                            <CheckboxControl
-                                {...this.propsForApplyNoiseReductionCheckbox}
-                                onChange={this.props.onChangeApplyNoiseReduction} />
-                        </div>
-
-                        <div className="buttons-control">
+                            <div className="s-checkbox-control-container">
+                                <CheckboxControl
+                                    {...this.propsForApplyNoiseReductionCheckbox}
+                                    onChange={this.props.onChangeApplyNoiseReduction} />
+                            </div>
                             <ButtonsControl
                                 handlePrimary={this.props.handlePrimary}
                                 handleSecondary={this.handleReset.bind(this)}
                                 handleAuxiliary={this.props.handleAuxiliary}
                                 {...this.propsForButtonsControl} />
-                        </div>
-                    </Sidekick>
+                        </Sidekick>
+                    </div>
                 </div>
             </div>
         );

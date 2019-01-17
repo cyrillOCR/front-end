@@ -124,7 +124,7 @@ class App extends Component {
         return Promise.resolve(data.payloads.map(pload => 'data:image/png;base64,' + pload));
       }).catch(err => {
         this.setState({loading: false});
-        return Promise.resolve([]);
+        return Promise.reject(err);
       })
     })
   }

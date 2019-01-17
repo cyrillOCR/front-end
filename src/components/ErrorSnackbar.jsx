@@ -22,7 +22,7 @@ class ErrorSnackbar extends React.Component {
         super(props);
         this.state = {
             open: props.open,
-            autoHideDuration: 6000,
+            autoHideDuration: 10000,
             message: props.message
         };
     }
@@ -58,7 +58,7 @@ class ErrorSnackbar extends React.Component {
                     open={this.state.open}
                     autoHideDuration={this.state.autoHideDuration}
                     onClose={this.handleClose}
-                    message={<span>{this.state.message}</span>}
+                    message={<span>{this.props.message}</span>}
                     action={[
                         <IconButton
                             key="close"
