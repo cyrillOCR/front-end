@@ -157,8 +157,8 @@ class App extends Component {
         }
       })
     }
-    return axios.post("http://golar3.go.ro:5000/addImage", {
-      // const req = axios.post("http://localhost:5000/addImage", {
+    return axios.post("https://golar3.go.ro:5000/addImage", {
+      // return axios.post("http://localhost:5000/addImage", {
       name: "image.jpg",
       payload: imageURI.substr(imageURI.indexOf(",") + 1),
       contrastFactor: parseFloat(contrastFactor),
@@ -204,7 +204,7 @@ class App extends Component {
       })
     }
     // return Promise.resolve({ boxes: [], text: args.imageURI })
-    return axios.post('http://golar3.go.ro:5050/feature', {
+    return axios.post('https://golar3.go.ro:5050/feature', {
       // return axios.post('http://192.168.0.103:5050/feature', {
       coords: coords,
       base64: processedImage
