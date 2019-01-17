@@ -215,7 +215,7 @@ export default class AppLayout extends Component {
         }
         const page = this.currentPage(match);
         const processedPage = this.getProcessedPage(page);
-
+        const adjustedPage = this.getAdjustedPage(page);
         const dummyRecognitionScreen = <TextRecognitionScreen
             imageURI={this.props.data[page].adjusted}
             onChangePage={page => {
@@ -234,7 +234,7 @@ export default class AppLayout extends Component {
         return <Async
             promiseFn={this.props.recognitionCallback}
             page={page}
-            imageURI={processedPage}
+            imageURI={adjustedPage}
             watch={JSON.stringify([page, processedPage])}>
             <Async.Loading>
                 {dummyRecognitionScreen}

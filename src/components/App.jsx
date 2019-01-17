@@ -114,7 +114,7 @@ class App extends Component {
         return Promise.resolve([docURI]);
       }
       //post request to addPdf if doc is PDF
-      return axios.post('http://golar3.go.ro:5000/convertPdf', {
+      return axios.post('https://golar3.go.ro:5000/convertPdf', {
         // return axios.post('http://localhost:5000/convertPdf', {
         name: "doc.pdf",
         payload: docURI.split(',')[1]
@@ -123,7 +123,7 @@ class App extends Component {
         this.setState({ loading: false })
         return Promise.resolve(data.payloads.map(pload => 'data:image/png;base64,' + pload));
       }).catch(err => {
-        this.setState({loading: false});
+        this.setState({ loading: false });
         return Promise.reject(err);
       })
     })
@@ -148,16 +148,16 @@ class App extends Component {
     //return Promise.resolve([[0.1, 0.1, segmentationThreshold / 100, (segmentationDaw ? 0.5 : 0.8)]]);
 
     if (!this.shouldProcessRequest(page, contrastFactor, applyDilation, applyNoiseReduction, segmentationFactor, separationFactor)) {
-      return this.getImageDimensions(this.state.data[page].adjusted).then((dimens) => {
-        [w, h] = dimens;
-
+      const processedImage = 'data:image/png;base64,' + this.state.data[page].processed;
+      return this.getImageDimensions(processedImage).then((dimens) => {
+        const [w, h] = dimens;
         return {
-          payload: 'data:image/png;base64,' + this.state.data[page].processed,
+          payload: processedImage,
           coords: (this.state.data[page].coords || []).map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h])
         }
       })
     }
-    const req = axios.post("http://golar3.go.ro:5000/addImage", {
+    return axios.post("https://golar3.go.ro:5000/addImage", {
       // const req = axios.post("http://localhost:5000/addImage", {
       name: "image.jpg",
       payload: imageURI.substr(imageURI.indexOf(",") + 1),
@@ -166,21 +166,18 @@ class App extends Component {
       applyNoiseReduction,
       segmentationFactor: parseFloat(segmentationFactor),
       separationFactor: parseFloat(separationFactor)
-    });
-
-    let w, h;
-    return this.getImageDimensions(imageURI).then(dimens => {
-      [w, h] = dimens;
-      return req;
     }).then(res => {
       const data = JSON.parse(res.data);
       data.payload = data.payload.substr(1).split('\'').join(''); // b'<<base64>>' => <<base64>>
       this.updateProcessedImage(page, data.payload);
       this.updateCoords(page, data.coords);
-      return {
-        payload: 'data:image/png;base64,' + data.payload,
-        coords: data.coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h])
-      }
+      return this.getImageDimensions('data:image/png;base64,' + data.payload).then(dimens => {
+        const [w, h] = dimens;
+        return {
+          payload: 'data:image/png;base64,' + data.payload,
+          coords: data.coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h])
+        }
+      })
     });
   }
 
@@ -201,31 +198,34 @@ class App extends Component {
       let adjustedImage = this.state.data[page].adjusted;
       let coords = this.state.data[page].wordsCoords;
       let text = this.state.data[page].text;
-      return this.getImageDimensions(adjustedImage).then(dimens => {
+      return this.getImageDimensions(processedImage).then(dimens => {
         const [w, h] = dimens;
         return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: adjustedImage, text }
       })
     }
     // return Promise.resolve({ boxes: [], text: args.imageURI })
-    return axios.post('http://golar3.go.ro:5050/feature', {
-    // return axios.post('http://192.168.0.103:5050/feature', {
+    return axios.post('https://golar3.go.ro:5050/feature', {
+      // return axios.post('http://192.168.0.103:5050/feature', {
       coords: coords,
       base64: processedImage
     }).then(response => {
       let data = response.data;
       let coords = [];
       let words = [];
-      for (let value of data){
+      for (let value of data) {
         coords.push(value[0]);
         words.push(value[1]);
       }
       this.setState({ loading: false })
       this.updateRecognizedText(page, words);
       this.updateWordsCoords(page, coords);
-      processedImage = this.state.data[page].adjusted;
-      return this.getImageDimensions(processedImage).then(dimens => {
+      return this.getImageDimensions('data:image/png;base64,' + processedImage).then(dimens => {
         const [w, h] = dimens;
-        return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: processedImage, text: words};
+        return {
+          coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]),
+          processedImage: imageURI, 
+          text: words
+        };
       })
     });
   }
