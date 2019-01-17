@@ -4,10 +4,11 @@ import ImageAdjustmentScreen from './ImageAdjustmentScreen';
 import ImageUploadScreen from './ImageUploadScreen';
 import '../styles/AppLayout.css';
 import SegmentationScreen from './SegmentationScreen';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import TextRecognitionScreen from './TextRecognitionScreen';
 import Async from 'react-async';
 import LoadingOverlay from './LoadingOverlay';
+import ErrorHandler from './ErrorSnackbar';
 
 
 export default class AppLayout extends Component {
@@ -18,18 +19,18 @@ export default class AppLayout extends Component {
             data: {},
             loading: false,
             prevScreen: '',
-            currentScreen: ''
+            currentScreen: '',
+            error: false
         };
 
-        this.loadingMessages = [
-            'Searching for courses in chirilic',
-            'Learning to read ugly writing',
-            'Hold tight now',
-            'A poor student is trying to figure it out',
-            'Dusting off the paper',
-            'Polishing the letters',
-            'We are all in this togheter',
-        ];
+    }
+
+    onError(errorMsg) {
+        this.setState({ error: true, errorMsg: errorMsg });
+    }
+
+    onErrorClose() {
+        this.setState({ error: false, errorMsg: '' });
     }
 
     onPageAdjustmentSubmit(currentPage, history, newData) {
@@ -99,8 +100,10 @@ export default class AppLayout extends Component {
                     for (let { file, i } of uris.map((file, i) => { return { file, i } }))
                         this.props.updateOriginalImage(i + 1, file);
                     this.setState({ loading: false });
-                    history.push('/1/adjust');
                     this.setActivePage(1, history, 'adjust');
+                }).catch(error => {
+                    this.setState({loading: false});
+                    this.onError(error.message);
                 });
             }} />;
     }
@@ -166,14 +169,14 @@ export default class AppLayout extends Component {
             applyDilation={cfg.applyDilation || false}
             applyNoiseReduction={cfg.applyNoiseReduction || false}
             segmentationFactor={parseFloat(cfg.segmentationFactor) || 0.5}
-            separationFactor={parseInt(cfg.separationFactor) || 3}
+            separationFactor={parseInt(cfg.separationFactor, 10) || 3}
             // initialValue={{ payload: this.props.data[page].adjusted, coords: [] }}
             watch={JSON.stringify([
                 page, cfg.contrastFactor, cfg.applyDilation, cfg.applyNoiseReduction, cfg.segmentationFactor, cfg.separationFactor
             ])}>
             <Async.Loading>
                 {dummySegmentationScreen}
-                <LoadingOverlay loadingStatements={this.loadingMessages} />
+                <LoadingOverlay />
             </Async.Loading>
             <Async.Resolved>
                 {data => <SegmentationScreen
@@ -198,11 +201,9 @@ export default class AppLayout extends Component {
             </Async.Resolved>
             <Async.Rejected>
                 {err => {
-                    console.log(err);
-                    return <React.Fragment>
-                        {dummySegmentationScreen}
-                        <div>Error. check console.</div>
-                    </React.Fragment>
+                    if (!this.state.error)
+                        this.onError(err.message);
+                    return dummySegmentationScreen;
                 }}
             </Async.Rejected>
         </Async>;
@@ -237,7 +238,7 @@ export default class AppLayout extends Component {
             watch={JSON.stringify([page, processedPage])}>
             <Async.Loading>
                 {dummyRecognitionScreen}
-                <LoadingOverlay loadingStatements={this.loadingMessages} />
+                <LoadingOverlay />
             </Async.Loading>
             <Async.Resolved>
                 {data => <TextRecognitionScreen
@@ -257,11 +258,9 @@ export default class AppLayout extends Component {
             </Async.Resolved>
             <Async.Rejected>
                 {err => {
-                    console.log(err);
-                    return <React.Fragment>
-                        {dummyRecognitionScreen}
-                        <div>{err}</div>
-                    </React.Fragment>
+                    if (!this.state.error)
+                        this.onError(err.message);
+                    return dummyRecognitionScreen;
                 }}
             </Async.Rejected>
         </Async>;
@@ -277,7 +276,13 @@ export default class AppLayout extends Component {
                 <Route path="/:page/recognition" render={this.renderRecognitionScreen.bind(this)} />
 
                 {(this.props.loading || this.state.loading) &&
-                    <LoadingOverlay loadingStatements={this.loadingMessages} />}
+                    <LoadingOverlay />}
+
+                <ErrorHandler
+                    open={this.state.error}
+                    message={this.state.errorMsg || ''}
+                    onClose={this.onErrorClose.bind(this)}
+                />
             </React.Fragment>
         </Router>;
     }

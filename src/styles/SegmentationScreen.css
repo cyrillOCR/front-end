@@ -1,33 +1,49 @@
-.segmentation-screen-container {
-    background-color: #f6f6f6;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    left: 0;
-    margin: 0 auto;
-    padding: 2rem 6rem;
+.s-container {
     position: absolute;
     top: 0;
-    width: 100%;
-}
-    
-.segmentation-screen-container .image-preview-container {
-    align-items: flex-end;
+    left: 0;
     display: flex;
-    flex-direction: column;
-    max-width: 800px;
-    padding-right: 1rem;
+    background: #f6f6f6;
     width: 100%;
+    height: 100%;
 }
 
-.segmentation-screen-container .sidekick-container-parent {
-    max-width: 800px;
-    padding-left: 1rem;
-    text-align: left;
+.s-content-wrapper {
     width: 100%;
+    max-width: 1024px;
+    padding: 2rem 1rem;
+    margin: 0 auto;
+    display: flex;
 }
 
-.segmentation-screen-container .sidekick-container-parent .buttons-control {
-    margin-top: 3.5rem;
+.s-left-column {
+    width: 50%;
+    padding: 1rem;
+    display: flex;
 }
 
+.s-right-column {
+    width: 50%;
+    padding: 1rem;
+}
+
+.s-image-preview {
+    position: relative;
+    flex-grow: 1;
+}
+
+.s-slider-control-container {
+    display: flex;
+}
+
+.s-slider-control-container .slider-control-container {
+    margin-left: 1rem;
+}
+
+.s-slider-control-container .slider-control-container:first-child {
+    margin-left: 0;
+}
+
+.s-right-column {
+    display: flex;
+}
