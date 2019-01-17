@@ -198,7 +198,7 @@ class App extends Component {
       let adjustedImage = this.state.data[page].adjusted;
       let coords = this.state.data[page].wordsCoords;
       let text = this.state.data[page].text;
-      return this.getImageDimensions(processedImage).then(dimens => {
+      return this.getImageDimensions('data:image/png;base64,' + processedImage).then(dimens => {
         const [w, h] = dimens;
         return { coords: coords.map(([a, b, c, d]) => [a / w, b / h, (c - a) / w, (d - b) / h]), processedImage: adjustedImage, text }
       })
