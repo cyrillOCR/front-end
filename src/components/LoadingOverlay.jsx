@@ -9,7 +9,7 @@ export default class LoadingOverlay extends React.Component {
         this.loadingMessages = [
             'Dusting off the paper',
             'Polishing the letters',
-            'Searching for courses in chirilic',
+            'Searching for courses in cyrillic',
             'Learning to read ugly writing',
             'We are all in this together',
             'A poor student is trying to figure it out',
