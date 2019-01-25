@@ -114,7 +114,7 @@ class App extends Component {
         return Promise.resolve([docURI]);
       }
       //post request to addPdf if doc is PDF
-      return axios.post('https://prepre-cyrill.fwd.wf/convertPdf', {
+      return axios.post('https://pre-cyrill.fwd.wf/convertPdf', {
         // return axios.post('http://localhost:5000/convertPdf', {
         name: "doc.pdf",
         payload: docURI.split(',')[1]
@@ -157,7 +157,7 @@ class App extends Component {
         }
       })
     }
-    return axios.post("https://prepre-cyrill.fwd.wf/addImage", {
+    return axios.post("https://pre-cyrill.fwd.wf/addImage", {
       // return axios.post("http://localhost:5000/addImage", {
       name: "image.jpg",
       payload: imageURI.substr(imageURI.indexOf(",") + 1),
