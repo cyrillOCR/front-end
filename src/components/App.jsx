@@ -204,7 +204,7 @@ class App extends Component {
       })
     }
     // return Promise.resolve({ boxes: [], text: args.imageURI })
-    return axios.post('https://miscui.serveo.net/feature', {
+    return axios.post('https://miscui.serveo.net', {
       // return axios.post('http://192.168.0.103:5050/feature', {
       coords: coords,
       base64: processedImage
