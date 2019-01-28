@@ -102,7 +102,7 @@ export default class AppLayout extends Component {
                     this.setState({ loading: false });
                     this.setActivePage(1, history, 'adjust');
                 }).catch(error => {
-                    this.setState({loading: false});
+                    this.setState({ loading: false });
                     this.onError(error.message);
                 });
             }} />;
@@ -156,8 +156,9 @@ export default class AppLayout extends Component {
             onChangeSegmentationFactor={() => { }}
             onChangeSeparationFactor={() => { }}
             boxes={[]}
-            handlePrimary={() => this.setActivePage(page, history, 'recognition')}
+            handlePrimary={() => { }}
             handleAuxiliary={() => this.setActivePage(page, history, 'adjust')}
+            handleReset={() => { }}
             defaultValues={this.props.data[page].configValues || {}} />
 
 
@@ -197,6 +198,13 @@ export default class AppLayout extends Component {
                     handlePrimary={() => this.setActivePage(page, history, 'recognition')}
                     handleAuxiliary={() => this.setActivePage(page, history, 'adjust')}
                     defaultValues={this.props.data[page].configValues || {}}
+                    handleReset={() => {
+                        this.updateCfg('contrastFactor', 1.5);
+                        this.updateCfg('applyDilation', false);
+                        this.updateCfg('applyNoiseReduction', false);
+                        this.updateCfg('segmentationFactor', .5);
+                        this.updateCfg('separationFactor', 3);
+                    }}
                 />}
             </Async.Resolved>
             <Async.Rejected>

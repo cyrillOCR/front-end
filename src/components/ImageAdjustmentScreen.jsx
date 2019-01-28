@@ -86,7 +86,7 @@ export default class ImageAdjustmentScreen extends Component {
                             </div>
                             <div className="ia-slider-control-container">
                                 <SliderControl
-                                    label="Position-X"
+                                    label="X-axis"
                                     iconName="arrows-alt-h"
                                     minValue={-100}
                                     maxValue={100}
@@ -97,7 +97,7 @@ export default class ImageAdjustmentScreen extends Component {
                                     ref={this.sliders.posX}
                                 />
                                 <SliderControl
-                                    label="Position-Y"
+                                    label="Y-axis"
                                     iconName="arrows-alt-v"
                                     minValue={-100}
                                     maxValue={100}

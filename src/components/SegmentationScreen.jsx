@@ -131,7 +131,7 @@ class SegmentationScreen extends Component {
                             </div>
                             <ButtonsControl
                                 handlePrimary={this.props.handlePrimary}
-                                handleSecondary={this.handleReset.bind(this)}
+                                handleSecondary={this.props.handleReset}
                                 handleAuxiliary={this.props.handleAuxiliary}
                                 {...this.propsForButtonsControl} />
                         </Sidekick>
@@ -155,7 +155,8 @@ SegmentationScreen.propTypes = {
     onChangeContrastFactor: PropTypes.func.isRequired,
     onChangeSegmentationFactor: PropTypes.func.isRequired,
     onChangeSeparationFactor: PropTypes.func.isRequired,
-    defaultValues: PropTypes.object
+    defaultValues: PropTypes.object,
+    handleReset: PropTypes.func.isRequired
 }
 
 export default SegmentationScreen;
