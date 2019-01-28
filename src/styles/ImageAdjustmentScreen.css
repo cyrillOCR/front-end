@@ -23,8 +23,8 @@
 }
 
 .ia-right-column {
-    /* width: 50%; */
-    flex-grow: 1;
+    width: 60%;
+    /* flex-grow: 1; */
     padding: 1rem;
 }
 
